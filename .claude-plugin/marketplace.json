@@ -1,0 +1,12 @@
+{
+  "$schema": "https://claude.ai/schemas/claude-plugin-marketplace.json",
+  "name": "claude-code-workflows",
+  "description": "A curated collection of Claude Code plugins with slash commands for design-to-code workflows, context management, and development best practices.",
+  "author": "arevlo",
+  "repository": "https://github.com/arevlo/claude-code-workflows",
+  "plugins": [
+    "plugins/figma-make-toolkit",
+    "plugins/notion-context-management",
+    "plugins/dev-workflows"
+  ]
+}
