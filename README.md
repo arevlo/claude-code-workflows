@@ -4,33 +4,33 @@ A curated collection of Claude Code plugins with slash commands for design-to-co
 
 ## Installation
 
-### Add Marketplace
+1. Run `/plugin`
+2. Select **Add Marketplace**
+3. Enter marketplace source: `arevlo/claude-code-workflows`
+4. Select which plugins to install
 
-1. Run `/plugin` and select **Add Marketplace**
-2. Enter marketplace source: `arevlo/claude-code-workflows`
-
-Or use the command directly:
+Or use commands directly:
 ```bash
+# Add marketplace
 /plugin marketplace add arevlo/claude-code-workflows
-```
 
-### Install Plugins
-
-```bash
-/plugin install figma-make-toolkit@claude-code-workflows
-/plugin install notion-context-management@claude-code-workflows
-/plugin install dev-workflows@claude-code-workflows
+# Install specific plugins
+/plugin install arevlo-design@claude-code-workflows
+/plugin install arevlo-context@claude-code-workflows
+/plugin install arevlo-dev@claude-code-workflows
 ```
 
 ## Plugins
 
-### figma-make-toolkit
+### arevlo-design
 
 Slash commands for Figma Make design-to-code workflows.
 
 - `/make` - Create or update prompts/changelogs in Notion for Figma Make
 
-### notion-context-management
+> **Requires:** [Notion MCP server](#notion-mcp-setup)
+
+### arevlo-context
 
 Slash commands for saving/loading Claude Code session context to Notion.
 
@@ -38,15 +38,17 @@ Slash commands for saving/loading Claude Code session context to Notion.
 - `/load-context` - Load prior context
 - `/context-reminder` - Reminder to save before ending
 
-**Customizable** - Update database names to match your setup
+> **Requires:** [Notion MCP server](#notion-mcp-setup)
 
-### dev-workflows
+### arevlo-dev
 
 Git commit workflows and development best practices.
 
 - `/commit` - Full commit workflow with branch management
 - `/pr-describe` - Generate/update PR descriptions
 - `/pr-review` - Request AI code review
+
+> **Requires:** [GitHub CLI](#github-cli-setup)
 
 ## Workflows
 
@@ -102,8 +104,6 @@ Run after Figma Make pushes changes (or any code changes):
 ## Requirements
 
 - **Claude Code** with plugin support
-- **[Notion MCP server](https://www.notion.com/help/notion-mcp)** (for Notion-related plugins)
-- **[GitHub CLI](https://cli.github.com/)** (`gh`) (for dev-workflows)
 
 ### Notion MCP Setup
 

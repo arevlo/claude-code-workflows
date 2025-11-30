@@ -8,16 +8,16 @@
   "repository": "https://github.com/arevlo/claude-code-workflows",
   "plugins": [
     {
-      "name": "figma-make-toolkit",
-      "source": "./plugins/figma-make-toolkit"
+      "name": "arevlo-design",
+      "source": "./plugins/arevlo-design"
     },
     {
-      "name": "notion-context-management",
-      "source": "./plugins/notion-context-management"
+      "name": "arevlo-context",
+      "source": "./plugins/arevlo-context"
     },
     {
-      "name": "dev-workflows",
-      "source": "./plugins/dev-workflows"
+      "name": "arevlo-dev",
+      "source": "./plugins/arevlo-dev"
     }
   ]
 }

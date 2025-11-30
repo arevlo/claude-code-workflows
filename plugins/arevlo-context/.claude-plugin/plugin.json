@@ -1,5 +1,5 @@
 {
-  "name": "notion-context-management",
+  "name": "arevlo-context",
   "description": "Slash commands for saving/loading Claude Code session context to Notion databases",
   "version": "1.0.0"
 }
