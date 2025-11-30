@@ -64,6 +64,10 @@ Types:
 - `test:` - Tests
 - `chore:` - Maintenance
 
+## Customization
+
+**Branch naming:** The `/commit` command uses `<git-username>.<type>-<description>` format by default. Update the command file if your organization uses a different convention.
+
 ## Zsh Aliases (Optional)
 
 Add to `~/.zshrc`:

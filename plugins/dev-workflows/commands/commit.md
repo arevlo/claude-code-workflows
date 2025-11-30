@@ -22,6 +22,9 @@ Commit staged/unstaged changes following commit best practices. Checks branch st
 2. **Check branch status (per repo):**
    - Run `git branch --show-current` to get current branch
    - If on `main`, ask user to create a feature branch first
+   - Get git username: `git config user.name | tr '[:upper:]' '[:lower:]' | tr ' ' '-'`
+   - **Branch naming format:** `<username>.<type>-<description>`
+     - Examples: `johndoe.docs-update-readme`, `janedoe.feat-new-feature`
    - Run `gh pr view --json state,merged -q '.merged'` to check if branch was merged
    - If merged: warn user and offer to create new branch from main
 
@@ -29,9 +32,9 @@ Commit staged/unstaged changes following commit best practices. Checks branch st
    ```bash
    git checkout main
    git pull origin main
-   git checkout -b <new-branch-name>
+   git checkout -b <username>.<type>-<description>
    ```
-   - Ask user for new branch name (suggest based on work being committed)
+   - Ask user for new branch name using the `<username>.<type>-<description>` format
 
 4. **Check for changes:**
    - Run `git status` to see staged and unstaged changes

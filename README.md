@@ -40,27 +40,56 @@ Git commit workflows and development best practices.
 - `/pr-describe` - Generate/update PR descriptions
 - `/pr-review` - Request AI code review
 
-## Workflow Overview
+## Workflows
+
+### Design Workflow (Figma Make)
 
 ```
-+-------------------------------------------------------------+
-|                     DESIGN WORKFLOW                          |
-+-------------------------------------------------------------+
-|                                                              |
-|  1. Create Spec     ->  Notion database                     |
-|                                                              |
-|  2. Create Prompt   ->  /make                               |
-|                                                              |
-|  3. Implement       ->  Figma Make                          |
-|                                                              |
-|  4. Iterate         ->  Follow-up prompts                   |
-|                                                              |
-|  5. Commit          ->  /commit                             |
-|                                                              |
-|  6. Save Context    ->  /save-context                       |
-|                                                              |
-+-------------------------------------------------------------+
+Claude Code               Notion                  Figma Make
+    |                       |                         |
+    |-- Create spec ------->|                         |
+    |                       |                         |
+    |-- /save-context ----->| (save as Spec)          |
+    |                       |                         |
+    |-- /make ------------->| (reference spec) ------>|
+    |                       |                         |
+    |                       |<-- iterate -------------|
+    |                       |                         |
+    |                       |<-- push to GitHub ------|
 ```
+
+1. **Create Spec** - Give Claude Code instructions for the feature/design
+2. **Save as Spec** - `/save-context` with "Spec" tag type
+3. **Create Prompt** - `/make` references the saved spec
+4. **Iterate** - Use Figma Make to implement and refine
+
+> **Note:** Figma Make pushes directly to GitHub. Committing happens separately in Claude Code.
+
+### Commit Workflow
+
+```
+/commit
+```
+
+Run after Figma Make pushes changes (or any code changes):
+- Stage and commit changes
+- Update PR description if PR exists
+- Push with confirmation
+
+### Context Management
+
+| Command | Purpose |
+|---------|---------|
+| `/save-context` | Save session context to Notion |
+| `/load-context <query>` | Search and load prior contexts |
+| `/context-reminder` | Reminder to save before ending |
+
+### PR Workflows
+
+| Command | Purpose |
+|---------|---------|
+| `/pr-describe` | Generate/update PR description |
+| `/pr-review` | Request @claude or @codex review |
 
 ## Requirements
 
