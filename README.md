@@ -25,9 +25,9 @@ Or use commands directly:
 1. Run `/plugin`
 2. Select **Manage Marketplaces**
 3. Select `claude-code-workflows` and choose **Update**
-4. Go back and select **Manage Plugins** to install any new plugins
+4. Go back and select **Browse and Install Plugins** to install any new plugins
 
-> **Note:** If you don't see a plugin after updating, go to **Manage Plugins** and enable or install it manually.
+> **Note:** If you don't see a plugin after updating, go to **Browse and Install Plugins** and install it manually.
 
 Or use commands:
 ```bash
