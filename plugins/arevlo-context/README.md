@@ -1,34 +1,63 @@
-# Notion Context Management
+# Context Management
 
-Slash commands for saving and loading Claude Code session context to Notion.
+Slash commands for saving and loading Claude Code session context to multiple destinations.
 
 ## Installation
 
 ```
-/plugin marketplace add arevlo/claude-code-workflows
-/plugin install notion-context-management@claude-code-workflows
+/install arevlo-context@arevlo/claude-code-workflows
 ```
 
 ## What's Included
 
 ### Commands
-- `/save-context` - Save current session to Notion
-- `/load-context` - Search and load prior context
+- `/save-context` - Save current session to multiple destinations
+- `/load-context` - Search and load prior context from multiple sources
 - `/context-reminder` - Reminder to save before ending session
 
-## Configuration Required
+## Storage Destinations
 
-This plugin requires:
-1. **Notion MCP server** configured in Claude Code
-2. **Notion database** for storing contexts (default name: `_clawd`)
-3. Update the data source ID in the commands to match your database
+| Destination | Description |
+|-------------|-------------|
+| Local /tmp | Quick, ephemeral markdown files in `/tmp/claude-contexts/` |
+| Notion | Persistent storage in your Notion database |
+| GitHub Issue | Create an issue in the current repo for tracking |
+| Docs folder | Save to `./docs/context/` in your project |
 
-### Database Schema
+## Requirements
+
+### Notion (optional)
+- **Notion MCP server** configured in Claude Code
+- **Notion database** for storing contexts (default name: `_clawd`)
 
 Your Notion database should have these properties:
 - **Name** (title) - Session/context title
 - **Project** (select) - Project name
 - **Tags** (multi-select) - Context, Summary, Spec, Reference
+
+### GitHub CLI (optional)
+
+If you want to save context to GitHub Issues, install the GitHub CLI:
+
+**macOS:**
+```bash
+brew install gh
+```
+
+**Ubuntu/Debian:**
+```bash
+sudo apt install gh
+```
+
+**Windows:**
+```bash
+winget install GitHub.cli
+```
+
+After installing, authenticate:
+```bash
+gh auth login
+```
 
 ## Usage
 
@@ -37,15 +66,17 @@ Your Notion database should have these properties:
 /save-context
 ```
 - Detects project from working directory
+- Asks where to save (local, Notion, GitHub, docs)
 - Asks for tag type and title
 - Generates comprehensive session summary
-- Creates page in Notion
+- Saves to selected destination
 
 ### Start of Session
 ```
-/load-context [project or topic]
+/load-context [search query]
 ```
-- Searches your context database
+- Asks which source to search
+- Searches your selected source
 - Shows matching results
 - Lets you select and view full content
 
