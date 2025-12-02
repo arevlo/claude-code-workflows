@@ -25,10 +25,14 @@ Commit staged/unstaged changes following commit best practices. Checks branch st
    - Get git username: `git config user.name | tr '[:upper:]' '[:lower:]' | tr ' ' '-'`
    - **Branch naming format:** `<username>.<type>-<description>`
      - Examples: `johndoe.docs-update-readme`, `janedoe.feat-new-feature`
-   - Run `gh pr view --json state,merged -q '.merged'` to check if branch was merged
-   - If merged: warn user and offer to create new branch from main
 
-3. **If branch was merged, handle it:**
+3. **Check if branch PR was already merged:**
+   - Run `gh pr view --json mergedAt -q '.mergedAt'`
+   - If returns a timestamp (not empty), the PR was MERGED
+   - **CRITICAL:** If merged, DO NOT commit to this branch - commits won't reach main!
+   - Warn user and MUST create new branch from main
+
+4. **If branch was merged, handle it:**
    ```bash
    git checkout main
    git pull origin main
@@ -36,40 +40,40 @@ Commit staged/unstaged changes following commit best practices. Checks branch st
    ```
    - Ask user for new branch name using the `<username>.<type>-<description>` format
 
-4. **Check for changes:**
+5. **Check for changes:**
    - Run `git status` to see staged and unstaged changes
    - Run `git diff --stat` to summarize changes
    - If no changes, tell user and exit
 
-5. **Stage changes** (if needed):
+6. **Stage changes** (if needed):
    - Show unstaged files and ask which to include
    - Run `git add <files>` for selected files
 
-6. **Generate commit message:**
+7. **Generate commit message:**
    - Follow conventional commits: `type: brief description`
    - Types: `feat`, `fix`, `docs`, `chore`, `refactor`, `test`, `style`
    - Maximum 50 characters
    - NO emoji, NO AI attribution, NO co-authorship
 
-7. **Show commit preview and get confirmation:**
+8. **Show commit preview and get confirmation:**
    - Show what will be committed
    - Show proposed commit message
    - **WAIT for explicit "yes" before executing**
 
-8. **Commit:**
+9. **Commit:**
    ```bash
    git commit -m "<message>"
    ```
 
-9. **Check if PR exists and update description:**
-   - Run `gh pr view --json number -q '.number'`
-   - If PR exists, run `/pr-describe` to update it with new changes
-   - If no PR, ask if user wants to push and create one
+10. **Check if PR exists and update description:**
+    - Run `gh pr view --json number -q '.number'`
+    - If PR exists, run `/pr-describe` to update it with new changes
+    - If no PR, ask if user wants to push and create one
 
-10. **Push** (only if user confirms):
+11. **Push** (only if user confirms):
     - Run `git push origin <branch>`
 
-11. **Repeat for next repo** (if multiple repos detected in step 1)
+12. **Repeat for next repo** (if multiple repos detected in step 1)
 
 ## Commit Message Format
 
