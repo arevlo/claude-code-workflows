@@ -1,10 +1,13 @@
 # arevlo-swarm
 
-Multi-agent orchestration for Claude Code - spawn background agents for parallel code analysis.
+Multi-agent orchestration with ACE context management for Claude Code.
 
 ## Overview
 
-The swarm plugin enables a "hive mind" approach to code analysis by running multiple specialized agents simultaneously. Each agent focuses on a specific concern (code review, type safety, silent failures, etc.) and writes findings to shared reports.
+The swarm plugin enables a "hive mind" approach to code analysis and **autonomous workflows**. It combines:
+- **Parallel agents** for code analysis (review, types, errors, etc.)
+- **ACE principles** (Advanced Context Engineering) for context management
+- **Research → Plan → Implement** workflow for complex tasks
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -35,14 +38,33 @@ The swarm plugin enables a "hive mind" approach to code analysis by running mult
 
 | Command | Description |
 |---------|-------------|
+| `/auto <goal>` | **NEW** Autonomous workflow - research, plan, implement |
 | `/swarm [preset]` | Start multi-agent swarm with preset or auto-detect |
 | `/spawn <agent>` | Spawn a single background agent |
 | `/hive` | Check status and findings from all agents |
 | `/sync` | Consolidate findings into prioritized action items |
-| `/fix` | **NEW** Interactive mode to fix issues one by one |
+| `/fix` | Interactive mode to fix issues (manual or automatic) |
 | `/stop [agent]` | Stop one or all running agents |
 
 ## Quick Start
+
+### Autonomous Mode (NEW)
+
+For complex tasks, use `/auto` to let Claude handle research, planning, and implementation:
+
+```bash
+/auto "add user authentication with OAuth"
+```
+
+**How it works:**
+1. **Research** - Explores codebase in isolated context, produces structured findings
+2. **Plan** - Creates phase-by-phase implementation blueprint
+3. **Human Approval** - You review and approve the plan (high leverage point)
+4. **Implement** - Executes plan phase-by-phase with checkpoints
+
+This follows ACE (Advanced Context Engineering) principles for better results on complex tasks.
+
+### Parallel Analysis Mode
 
 ### 1. Start a Swarm
 
@@ -134,6 +156,7 @@ Proceed with these agents? [Y/n]
 
 ## Available Agents
 
+### Analysis Agents
 | Agent | Focus | Best For |
 |-------|-------|----------|
 | `reviewer` | Code quality, patterns, best practices | Any project |
@@ -142,6 +165,12 @@ Proceed with these agents? [Y/n]
 | `silent-hunter` | Unhandled async, silent failures | Async code, plugins |
 | `comment-analyzer` | TODOs, FIXMEs, documentation | Cleanup, documentation |
 | `test-analyzer` | Test coverage and quality | Testing |
+
+### Orchestration Agents (NEW)
+| Agent | Focus | Best For |
+|-------|-------|----------|
+| `researcher` | Deep codebase exploration | /auto research phase |
+| `coordinator` | Prioritize and group issues | Multi-agent coordination |
 
 ## How It Works
 
