@@ -38,21 +38,22 @@ Example follow-ups:
 
 ### Step 0: Check for Recent Activity
 
-If a prompt was recently created for this project (within current session), ask:
+If a prompt was recently created for this project (within current session), **use AskUserQuestion** with these options:
 
 ```
-"I see you recently created a prompt. Would you like to:"
+Question: "I see you recently created a prompt. What would you like to do?"
 
-1. Modify the existing prompt
-2. Create a new prompt
-3. Exit
+Options:
+1. Modify the existing prompt - Edit or add to the prompt I just created
+2. Create a new prompt - Start fresh with a different feature
+3. Exit - I'm done for now
 ```
+
+**You MUST present this as an interactive picker, not just text.**
 
 - If **Modify**: Open the existing prompt for editing
 - If **Create new**: Continue to Step 1
 - If **Exit**: End the workflow
-
-This ensures you can always create a new prompt even if one was just made.
 
 ### Step 1: Select Make Project
 
