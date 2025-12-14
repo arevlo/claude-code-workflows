@@ -57,24 +57,25 @@ Options:
 
 ### Step 1: Select Make Project
 
+**THIS MUST BE THE FIRST QUESTION. Do NOT ask about entry type first.**
+
 **Auto-detect from context:**
 1. Check **branch name** for project reference (e.g., `arevlo.feat-waves-ui` → "Waves")
-2. Check **current directory** name (e.g., `make-prototypes` → look for matching Make project)
-3. Do NOT assume from repo name alone
+2. Check **current directory** name (e.g., `make-prototypes` could be "Prototypes" project)
+3. Do NOT assume "Flowmingo" or repo name - that's the workspace, not the Make project
 
-**Always confirm with picker** even if auto-detected:
+**Use AskUserQuestion immediately:**
 
 ```
 Question: "Which Make project is this for?"
 
 Options:
-1. [Auto-detected] Waves - (detected from branch name)
-2. Choose a different project
+1. Waves - (detected from branch: arevlo.feat-waves-ui)
+2. Prototypes - (detected from directory: make-prototypes)
+3. Choose a different project - Let me pick from the list
 ```
 
-If user chooses "different project", show full list from `make_projects_path`.
-
-**Project is used for:** Notion tags and prompt organization only (don't change directories)
+**Do NOT proceed until project is confirmed.** Only after user selects, continue to Step 2.
 
 ### Step 2: Describe What to Build
 
