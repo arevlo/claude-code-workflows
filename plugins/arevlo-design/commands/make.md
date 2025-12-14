@@ -129,7 +129,25 @@ Example "Current State" when sourced from recent prompt:
 1. **Search `_clawd`** for specs/context related to the project
 2. **Search `_make`** for older prompts on the same project (for patterns/context)
 
-Present top matches and let user confirm which to include as references.
+**Present references with today's prompts recommended:**
+
+```
+Which related pages should I reference?
+
+Today's prompts (recommended):
+1. [x] Prompt: Feature X - (Today)
+2. [x] Prompt: Feature Y - (Today)
+
+Older prompts:
+3. [ ] Prompt: Prior Feature - (Dec 10)
+4. [ ] Context: Spec Doc
+
+5. [ ] None - Don't include any references
+```
+
+- **Today's prompts go first** and should be pre-selected
+- **Mark them "(Today - Recommended)"** so user knows they're current
+- **Older prompts below** are available but not pre-selected
 
 #### 5c. State resolution priority
 
