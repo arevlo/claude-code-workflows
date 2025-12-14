@@ -26,13 +26,13 @@ Commit staged/unstaged changes following commit best practices. Checks branch st
    - **Branch naming format:** `<username>.<type>-<description>`
      - Examples: `johndoe.docs-update-readme`, `janedoe.feat-new-feature`
 
-3. **Check if branch PR was already merged:**
-   - Run `gh pr view --json mergedAt -q '.mergedAt'`
-   - If returns a timestamp (not empty), the PR was MERGED
-   - **CRITICAL:** If merged, DO NOT commit to this branch - commits won't reach main!
+3. **Check if branch PR was already merged or closed:**
+   - Run `gh pr view --json mergedAt,state -q '{mergedAt,state}'`
+   - If `mergedAt` has a timestamp OR `state` is "CLOSED": PR is done
+   - **CRITICAL:** If merged/closed, DO NOT commit to this branch - commits won't reach main!
    - Warn user and MUST create new branch from main
 
-4. **If branch was merged, handle it:**
+4. **If branch was merged/closed, handle it:**
    ```bash
    git checkout main
    git pull origin main
@@ -65,15 +65,51 @@ Commit staged/unstaged changes following commit best practices. Checks branch st
    git commit -m "<message>"
    ```
 
-10. **Check if PR exists and update description:**
-    - Run `gh pr view --json number -q '.number'`
-    - If PR exists, run `/pr-describe` to update it with new changes
-    - If no PR, ask if user wants to push and create one
+10. **Post-commit: Ask user's intent:**
+    Ask user:
+    ```
+    Committed! What would you like to do?
+    1. Push now
+    2. Continue making changes (will push later)
+    ```
 
-11. **Push** (only if user confirms):
-    - Run `git push origin <branch>`
+11. **If "Continue making changes":**
+    - Done for this repo
+    - Skip to step 14 (repeat for next repo)
 
-12. **Repeat for next repo** (if multiple repos detected in step 1)
+12. **If "Push now" - Check PR status:**
+    Run: `gh pr view --json number,state,mergedAt 2>/dev/null`
+
+    **Case A: PR exists and state="OPEN"**
+    - Push: `git push origin <branch>`
+    - Run `/pr-describe` to update PR description with new changes
+    - Show PR link
+
+    **Case B: PR exists and state="CLOSED" or mergedAt is set**
+    - **BLOCK** - Do not push!
+    - Warn: "This branch's PR is closed/merged. Commits won't reach main."
+    - Suggest creating new branch from main
+
+    **Case C: No PR exists**
+    Ask:
+    ```
+    No PR exists. What would you like to do?
+    1. Just push (no PR yet)
+    2. Push and create PR
+    ```
+
+    - If "Just push":
+      - `git push -u origin <branch>` (first push) or `git push origin <branch>`
+
+    - If "Push and create PR":
+      1. Push: `git push -u origin <branch>`
+      2. Create PR: `gh pr create --title "<type>: <brief description>" --body ""`
+      3. Run `/pr-describe` to generate and set proper description
+      4. Show PR link
+
+13. **Confirm** with summary of what was done (committed, pushed, PR status)
+
+14. **Repeat for next repo** (if multiple repos detected in step 1)
 
 ## Commit Message Format
 
