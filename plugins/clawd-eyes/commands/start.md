@@ -1,52 +1,54 @@
 ---
-description: Start clawd-eyes visual browser inspector
-allowed-tools: Bash,TodoWrite
+description: Start clawd-eyes backend server and web UI
+allowed-tools: Bash,Read
 ---
 
-# Start clawd-eyes
+# Start Clawd-Eyes
 
-Start the clawd-eyes visual browser inspector. This will clear any existing processes on the required ports and start the backend server and web UI.
+Start the clawd-eyes visual browser inspector servers.
 
 ## Instructions
 
-1. **Kill existing processes on clawd-eyes ports**
-   - Check ports 4000, 4001, 3000, 9222
-   - Kill any processes using these ports with `kill -9`
+1. **Find the clawd-eyes project:**
+   - Search for a directory containing `clawd-eyes` with a `package.json` that has `"name": "clawd-eyes"`
+   - Check common locations: current directory, parent directories, or ask the user
+   - If not found, ask the user for the path to their clawd-eyes installation
 
-2. **Navigate to clawd-eyes directory**
+2. **Check if servers are already running** on the ports:
+   - Port 4000 (HTTP API)
+   - Port 4001 (WebSocket)
+   - Port 5173 (Web UI)
+   - Port 9222 (Chrome DevTools)
+
+3. If any ports are in use, inform the user and suggest running `/clawd-eyes:stop` first
+
+4. If ports are free, start the servers from the clawd-eyes directory:
+
+   **Start backend** (in background):
    ```bash
-   cd ~/Desktop/personal-repos/clawd-eyes
+   cd <clawd-eyes-path> && npm start &
    ```
 
-3. **Check if dependencies are installed**
-   - If `node_modules` doesn't exist, run `npm install`
-   - If `web/node_modules` doesn't exist, run `cd web && npm install`
-
-4. **Start the backend server in background**
+   **Start web UI** (in background):
    ```bash
-   npm start &
+   cd <clawd-eyes-path>/web && npm run dev &
    ```
-   This launches the Playwright browser and WebSocket server on ports 4000/4001/9222.
 
-5. **Start the web UI in background**
-   ```bash
-   cd web && npm run dev &
-   ```
-   This starts Vite dev server on port 3000.
+5. Wait a few seconds for servers to start
 
-6. **Report to user**
-   - Backend: http://localhost:4000 (API), ws://localhost:4001 (WebSocket)
-   - Web UI: http://localhost:3000
+6. Report the status:
+   - Backend API: http://localhost:4000
+   - WebSocket: ws://localhost:4001
+   - Web UI: http://localhost:5173
    - CDP: ws://localhost:9222
 
-7. **Open web UI in browser**
-   ```bash
-   open http://localhost:3000
-   ```
+7. Inform the user they can open http://localhost:5173 in their browser
 
-## Notes
+## Ports Used
 
-- The backend must be started before the web UI
-- Wait ~2 seconds between starting backend and web UI
-- Use `lsof -i :<port>` to check what's using a port
-- All processes run in background - use `/clawd-eyes:stop` to stop them
+| Port | Service |
+|------|---------|
+| 4000 | HTTP API |
+| 4001 | WebSocket (live updates) |
+| 5173 | Web UI (Vite dev server) |
+| 9222 | Chrome DevTools Protocol |

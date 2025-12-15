@@ -1,39 +1,54 @@
 ---
-description: Watch for design requests and notify when received
-allowed-tools: Bash, mcp__clawd-eyes__get_design_context
+description: Watch for design requests from clawd-eyes web UI
+allowed-tools: Bash,Read
 ---
 
 # Watch for Design Requests
 
-Poll the clawd-eyes MCP for pending design requests and notify when one arrives.
+Monitor for incoming design requests from the clawd-eyes web UI.
 
 ## Instructions
 
-1. **Start polling loop**
-   - Check every 3 seconds for pending requests
-   - Use `mcp__clawd-eyes__get_design_context` tool
-   - If response contains "No pending design request" → continue polling
-   - If request found → notify user and stop
+1. **Check if clawd-eyes is running first**
+   ```bash
+   lsof -i :4000 2>/dev/null | grep LISTEN
+   ```
+   If not running, tell user to run `/clawd-eyes:start` first.
 
-2. **On request found**
-   - Display notification: "Design request received!"
-   - Show brief summary: element selector + first 50 chars of instruction
-   - Tell user: "Use `get_design_context` to see full details"
+2. **Find the clawd-eyes data directory**
+   - Look for `~/Desktop/personal-repos/clawd-eyes/data/pending-request.json`
+   - Or search for the clawd-eyes project directory
 
-3. **Run in background**
-   - This runs as a background task
-   - User can continue working while watching
-   - Stop after 5 minutes of no requests (timeout)
-   - Maximum 100 poll attempts
+3. **Check for pending request**
+   ```bash
+   cat ~/Desktop/personal-repos/clawd-eyes/data/pending-request.json 2>/dev/null
+   ```
 
-4. **Polling implementation**
-   - Use a loop counter to track attempts
-   - Sleep 3 seconds between checks
-   - Print "." every 10 checks to show still watching
+4. **If request exists:**
+   - Read the file contents
+   - Display a summary: selector, instruction (first 100 chars)
+   - Tell user: "Design request found! I can now help you implement this."
+   - Offer to call the `get_design_context` MCP tool to get full details with screenshot
 
-## Usage
+5. **If no request:**
+   - Tell user: "No pending request. Select an element in the clawd-eyes web UI and click 'Send to clawd-eyes'."
+   - Optionally poll again in a few seconds (ask user if they want to wait)
 
-After starting clawd-eyes:
-1. Run `/clawd-eyes:watch` to start watching
-2. Select element in web UI and send request
-3. Claude Code will notify you when request arrives
+## File Location
+
+The pending request is stored at:
+```
+<clawd-eyes-path>/data/pending-request.json
+```
+
+## Request Format
+
+```json
+{
+  "selector": "div.example",
+  "instruction": "User's design instruction",
+  "css": { "width": "100px", ... },
+  "boundingBox": { "x": 0, "y": 0, "width": 100, "height": 50 },
+  "timestamp": 1234567890
+}
+```
