@@ -15,7 +15,7 @@ Slash commands for managing clawd-eyes visual browser inspector.
 
 - 4000 - HTTP API
 - 4001 - WebSocket
-- 5173 - Web UI (Vite)
+- 3000 - Web UI (Vite)
 - 9222 - Chrome DevTools Protocol
 
 ## Requirements

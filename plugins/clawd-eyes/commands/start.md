@@ -10,7 +10,7 @@ Start the clawd-eyes visual browser inspector. This will clear any existing proc
 ## Instructions
 
 1. **Kill existing processes on clawd-eyes ports**
-   - Check ports 4000, 4001, 5173, 9222
+   - Check ports 4000, 4001, 3000, 9222
    - Kill any processes using these ports with `kill -9`
 
 2. **Navigate to clawd-eyes directory**
@@ -32,12 +32,17 @@ Start the clawd-eyes visual browser inspector. This will clear any existing proc
    ```bash
    cd web && npm run dev &
    ```
-   This starts Vite dev server on port 5173.
+   This starts Vite dev server on port 3000.
 
 6. **Report to user**
    - Backend: http://localhost:4000 (API), ws://localhost:4001 (WebSocket)
-   - Web UI: http://localhost:5173
+   - Web UI: http://localhost:3000
    - CDP: ws://localhost:9222
+
+7. **Open web UI in browser**
+   ```bash
+   open http://localhost:3000
+   ```
 
 ## Notes
 

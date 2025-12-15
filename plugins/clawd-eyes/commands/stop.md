@@ -11,14 +11,14 @@ Stop all clawd-eyes processes and free up the ports.
 
 1. **Find and kill processes on each port**
 
-   For each port (4000, 4001, 5173, 9222):
+   For each port (4000, 4001, 3000, 9222):
    ```bash
    lsof -ti :<port> | xargs kill -9 2>/dev/null
    ```
 
 2. **Verify ports are free**
    ```bash
-   lsof -i :4000,:4001,:5173,:9222
+   lsof -i :4000,:4001,:3000,:9222
    ```
    Should return empty if all processes stopped.
 
@@ -29,7 +29,7 @@ Stop all clawd-eyes processes and free up the ports.
 ## Quick One-Liner
 
 ```bash
-lsof -ti :4000,:4001,:5173,:9222 | xargs kill -9 2>/dev/null; echo "clawd-eyes stopped"
+lsof -ti :4000,:4001,:3000,:9222 | xargs kill -9 2>/dev/null; echo "clawd-eyes stopped"
 ```
 
 ## Notes

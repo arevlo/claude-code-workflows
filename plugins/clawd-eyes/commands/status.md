@@ -20,8 +20,8 @@ Check if clawd-eyes services are running.
    echo "WebSocket (4001):" && \
    lsof -i :4001 2>/dev/null || echo "  Not running" && \
    echo "" && \
-   echo "Web UI (5173):" && \
-   lsof -i :5173 2>/dev/null || echo "  Not running" && \
+   echo "Web UI (3000):" && \
+   lsof -i :3000 2>/dev/null || echo "  Not running" && \
    echo "" && \
    echo "Chrome CDP (9222):" && \
    lsof -i :9222 2>/dev/null || echo "  Not running"
@@ -35,7 +35,7 @@ Check if clawd-eyes services are running.
 
 ## URLs (when running)
 
-- Web UI: http://localhost:5173
+- Web UI: http://localhost:3000
 - API: http://localhost:4000
 - WebSocket: ws://localhost:4001
 - CDP: ws://localhost:9222
