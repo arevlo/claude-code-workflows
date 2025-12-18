@@ -48,10 +48,11 @@ Slash commands for Figma Make design-to-code workflows.
 
 ### arevlo-context
 
-Slash commands for saving/loading Claude Code session context.
+Slash commands for saving/loading Claude Code session context and plans.
 
 - `/save-context` - Save session to local, Notion, GitHub, or docs/plans folder
 - `/load-context` - Search and load prior context from multiple sources
+- `/plan` - Load, save, or browse Claude Code plans
 
 > **Requires:** [Notion MCP server](#notion-mcp-setup) for Notion destinations
 
@@ -73,8 +74,10 @@ Git commit workflows and development best practices.
 Multi-agent orchestration for parallel code analysis. Works with any project type.
 
 - `/swarm [preset]` - Start swarm (auto-detects project or use preset)
+- `/auto <goal>` - Autonomous workflow - research, plan, and implement with minimal interruption
 - `/spawn <agent>` - Spawn a single background agent
 - `/hive` - Check status and findings from all agents
+- `/fix` - Interactive fix mode - address swarm findings one by one
 - `/sync` - Consolidate findings into prioritized action items
 - `/stop [agent]` - Stop one or all running agents
 
@@ -91,6 +94,7 @@ Visual browser inspector for Claude Code. Control the clawd-eyes servers.
 - `/clawd-eyes:start` - Start backend and web UI servers
 - `/clawd-eyes:stop` - Stop all servers (kills processes on ports 4000, 4001, 5173, 9222)
 - `/clawd-eyes:status` - Check if servers are running
+- `/clawd-eyes:watch` - Watch for design requests from web UI
 - `/clawd-eyes:open` - Open web UI in browser
 
 > **Requires:** [clawd-eyes](https://github.com/arevlo/clawd-eyes) project installed locally
