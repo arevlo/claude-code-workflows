@@ -89,6 +89,8 @@ Multi-agent orchestration for parallel code analysis. Works with any project typ
 
 ### clawd-eyes
 
+> **⚠️ In Development:** This plugin is still being developed. The repository is not yet publicly available.
+
 Visual browser inspector for Claude Code. Control the clawd-eyes servers.
 
 - `/clawd-eyes:start` - Start backend and web UI servers
@@ -97,7 +99,7 @@ Visual browser inspector for Claude Code. Control the clawd-eyes servers.
 - `/clawd-eyes:watch` - Watch for design requests from web UI
 - `/clawd-eyes:open` - Open web UI in browser
 
-> **Requires:** [clawd-eyes](https://github.com/arevlo/clawd-eyes) project installed locally
+> **Requires:** clawd-eyes project installed locally (not yet available)
 
 ## Workflows
 
