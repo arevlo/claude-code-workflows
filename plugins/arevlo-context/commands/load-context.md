@@ -21,6 +21,7 @@ Run these checks silently to determine which options to show:
 - **GitHub Issues:** Check if in a git repo with remote: `git remote get-url origin`
 - **Docs folder:** Check if `docs/context/` directory exists using Glob
 - **Plans folder:** Check if `plans/` directory exists using Glob
+- **Claude Plans:** Check if `~/.claude-personal/plans/` OR `~/.claude/plans/` directory exists
 
 ### 2. Show source picker
 ALWAYS ask the user where to search - present available options:
@@ -33,6 +34,7 @@ Where would you like to search for context?
 3. GitHub Issues (in current repo)    [only if git remote exists]
 4. Docs folder (./docs/context/)      [only if docs/context exists]
 5. Plans folder (./plans/)            [only if plans/ exists]
+6. Claude Plans (~/.claude/plans/)    [only if ~/.claude{-personal}/plans exists]
 
 Select source:
 ```
@@ -81,6 +83,26 @@ Select source:
 - If query provided, use Grep to search file content for matches
 - If no query, show all files
 - Display filenames (plans are typically named by feature/topic)
+
+**If Claude Plans:**
+- Detect plans directory:
+  - Check `~/.claude-personal/plans/` first (personal config)
+  - Fall back to `~/.claude/plans/` (standard config)
+- List files using Bash: `ls -lt {plans_dir}/*.md | head -20` (sorted by modified date)
+- For each plan file, extract metadata:
+  - **Title:** First line starting with `#` (use `head -1`)
+  - **Summary:** Look for `## Goal`, `## Summary`, or `## Overview` section, take first 1-2 lines
+  - **Modified date:** From `ls -l` output
+- If query provided, use Grep to filter by title/content match
+- Display in format:
+  ```
+  1. [2024-12-18] Portfolio Content Review
+     Goal: Document and review portfolio content...
+
+  2. [2024-12-17] Design Token Pipeline
+     Goal: Automate design token sync from Figma...
+  ```
+- Sort by modified date (newest first)
 
 ### 4. Display results
 Show results with:

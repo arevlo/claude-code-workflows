@@ -1,6 +1,6 @@
 # Context Management
 
-Slash commands for saving and loading Claude Code session context to multiple destinations.
+Slash commands for saving and loading Claude Code session context and plans to multiple destinations.
 
 ## Installation
 
@@ -13,6 +13,7 @@ Slash commands for saving and loading Claude Code session context to multiple de
 ### Commands
 - `/save-context` - Save current session to multiple destinations
 - `/load-context` - Search and load prior context from multiple sources
+- `/plan` - Load, save, or browse Claude Code plans
 
 ## Storage Destinations
 
@@ -22,6 +23,7 @@ Slash commands for saving and loading Claude Code session context to multiple de
 | Notion | Persistent storage in your Notion database |
 | GitHub Issue | Create an issue in the current repo for tracking |
 | Docs folder | Save to `./docs/context/` in your project |
+| Claude Plans | Plans from `~/.claude/plans/` or `~/.claude-personal/plans/` |
 
 ## Requirements
 
@@ -78,6 +80,29 @@ gh auth login
 - Searches your selected source
 - Shows matching results
 - Lets you select and view full content
+
+### Continue a Plan
+```
+/plan
+```
+- Shows recent plans from `~/.claude/plans/` with titles and summaries
+- Select a plan to load and continue working on it
+
+```
+/plan latest
+```
+- Quickly loads the most recently modified plan
+
+```
+/plan save
+```
+- Saves current plan to chosen destination (local, Notion, GitHub)
+- Use before running out of context to preserve your work
+
+```
+/plan search <query>
+```
+- Search plans across all sources by keyword
 
 ## Customization
 
