@@ -1,5 +1,5 @@
 {
   "name": "arevlo-context",
-  "description": "Slash commands for saving/loading Claude Code session context and plans to multiple destinations",
-  "version": "1.5.0"
+  "description": "Save/load session context with /context-status monitoring - supports swarm checkpoints, /tmp quick saves, and multiple destinations",
+  "version": "1.6.0"
 }
