@@ -38,7 +38,8 @@ The swarm plugin enables a "hive mind" approach to code analysis and **autonomou
 
 | Command | Description |
 |---------|-------------|
-| `/auto <goal>` | **NEW** Autonomous workflow - research, plan, implement |
+| `/auto <goal>` | Autonomous workflow - research, plan, implement with checkpoints |
+| `/auto --resume` | Resume from most recent checkpoint |
 | `/swarm [preset]` | Start multi-agent swarm with preset or auto-detect |
 | `/spawn <agent>` | Spawn a single background agent |
 | `/hive` | Check status and findings from all agents |
@@ -48,7 +49,7 @@ The swarm plugin enables a "hive mind" approach to code analysis and **autonomou
 
 ## Quick Start
 
-### Autonomous Mode (NEW)
+### Autonomous Mode
 
 For complex tasks, use `/auto` to let Claude handle research, planning, and implementation:
 
@@ -61,6 +62,12 @@ For complex tasks, use `/auto` to let Claude handle research, planning, and impl
 2. **Plan** - Creates phase-by-phase implementation blueprint
 3. **Human Approval** - You review and approve the plan (high leverage point)
 4. **Implement** - Executes plan phase-by-phase with checkpoints
+
+**Context-Aware Features:**
+- Automatic checkpoints saved after each phase
+- Resume interrupted sessions with `/auto --resume`
+- Context monitoring warns when approaching limits
+- Emergency saves before auto-compact events
 
 This follows ACE (Advanced Context Engineering) principles for better results on complex tasks.
 
@@ -180,6 +187,9 @@ Agents communicate through files in `.claude/swarm/`:
 
 ```
 .claude/swarm/
+├── research/       # /auto Phase 1 outputs
+├── plans/          # /auto Phase 2 outputs
+├── progress/       # Checkpoints (auto + agent)
 ├── reports/        # Agent findings (timestamped)
 ├── issues/         # Extracted issues
 ├── context/        # Shared state
@@ -194,6 +204,23 @@ The swarm approach helps manage context limits:
 - Each agent has its own context window
 - Agents write findings to files (not accumulating in your session)
 - You load only what you need via `/sync` or `/load-context swarm`
+
+### Context Protocol
+
+All agents follow a context protocol for graceful operation:
+
+| Context % | Status | Action |
+|-----------|--------|--------|
+| < 40% | Good | Continue normally |
+| 40-60% | Watch | Save checkpoint, continue |
+| 60-70% | Warning | Compact and checkpoint |
+| > 70% | Critical | Complete gracefully, save state |
+
+**Automatic features:**
+- Checkpoints saved at phase transitions
+- Emergency saves triggered before auto-compact (via PreCompact hook)
+- Agents complete gracefully rather than getting cut off
+- Use `/load-context` → "Swarm checkpoints" to recover
 
 ## Requirements
 

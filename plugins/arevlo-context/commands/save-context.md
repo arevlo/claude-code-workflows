@@ -31,7 +31,7 @@ ALWAYS ask the user where to save - present available options:
 ```
 Where would you like to save this context?
 
-1. Local /tmp folder (quick, ephemeral)
+1. Quick save to /tmp (recommended for checkpoints)
 2. Notion (_clawd database)
 3. GitHub Issue (in current repo)     [only if git remote exists]
 4. Docs folder (./docs/context/)      [only if docs/ exists]
@@ -39,6 +39,9 @@ Where would you like to save this context?
 
 Select destination:
 ```
+
+**Note:** Option 1 (/tmp) is fastest and recommended for quick checkpoints during work.
+Use Notion or GitHub for persistent, searchable context storage.
 
 ### 4. Ask for tag type
 ALWAYS show all 4 options:
@@ -61,8 +64,15 @@ Create comprehensive session summary including:
 
 **If Local /tmp:**
 - Create directory `/tmp/claude-contexts/` if it doesn't exist
-- Save as markdown file: `context-{YYYY-MM-DD}-{HH-mm}-{project}.md`
+- Save as markdown file: `{YYYY-MM-DD}-{HH-mm}-{project}.md`
 - Use Write tool
+- Also update swarm context pointer if `.claude/swarm/` exists:
+  ```bash
+  # Update latest context pointer for swarm integration
+  if [ -d ".claude/swarm/context" ]; then
+    echo "/tmp/claude-contexts/{filename}" > .claude/swarm/context/latest-save.txt
+  fi
+  ```
 - Report full path to user
 
 **If Notion:**

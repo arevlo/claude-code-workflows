@@ -14,6 +14,8 @@ Autonomous mode for complex tasks. Follows ACE (Advanced Context Engineering) pr
 
 ```
 /auto <goal>
+/auto --resume              # Resume from most recent checkpoint
+/auto --resume <checkpoint> # Resume from specific checkpoint file
 ```
 
 **Examples:**
@@ -21,9 +23,45 @@ Autonomous mode for complex tasks. Follows ACE (Advanced Context Engineering) pr
 /auto "add user authentication with OAuth"
 /auto "refactor the API layer to use repository pattern"
 /auto "fix the memory leak in the data processor"
+/auto --resume              # Continue from last checkpoint
 ```
 
 ## Steps
+
+### Phase 0: Resume Check (if --resume flag)
+
+If `--resume` flag is provided:
+
+1. **Find checkpoint to resume:**
+   - If no specific file given: Find most recent checkpoint in `.claude/swarm/progress/`
+   - If file given: Load that specific checkpoint
+
+   ```bash
+   # Find most recent checkpoint
+   ls -t .claude/swarm/progress/auto-*.md 2>/dev/null | head -1
+   ```
+
+2. **Load checkpoint:**
+   - Read the checkpoint file
+   - Extract: goal, completed phases, current state, next steps
+   - Display summary to user:
+     ```
+     ┌─────────────────────────────────────────────────────────┐
+     │  RESUMING AUTO MODE                                     │
+     │                                                         │
+     │  Goal: <goal from checkpoint>                           │
+     │  Last checkpoint: <timestamp>                           │
+     │  Completed: Phase 1 (Research), Phase 2 (Plan)          │
+     │  Resuming at: Phase 3 (Implementation)                  │
+     └─────────────────────────────────────────────────────────┘
+     ```
+
+3. **Load context:**
+   - Read research file if referenced: `.claude/swarm/research/<file>.md`
+   - Read plan file if referenced: `.claude/swarm/plans/<file>.md`
+   - Jump to appropriate phase
+
+---
 
 ### Phase 1: Research (Context Isolated)
 
@@ -109,6 +147,32 @@ Autonomous mode for complex tasks. Follows ACE (Advanced Context Engineering) pr
 
    Show the compacted findings and ask if research is sufficient or needs expansion.
 
+5. **Context checkpoint (before Phase 2):**
+
+   Before transitioning to planning, save a checkpoint:
+
+   ```markdown
+   # Auto Checkpoint: <goal>
+   Phase: Research Complete
+   Timestamp: <ISO timestamp>
+
+   ## Completed
+   - [x] Phase 1: Research (saved to .claude/swarm/research/<file>.md)
+
+   ## Current State
+   Research complete. Ready to create implementation plan.
+
+   ## Next Steps
+   1. Create implementation plan based on research
+   2. Get human approval on plan
+   3. Execute implementation phases
+
+   ## Key Files
+   - Research: .claude/swarm/research/<timestamp>.md
+   ```
+
+   Save to `.claude/swarm/progress/auto-<timestamp>-phase1.md`
+
 ---
 
 ### Phase 2: Planning
@@ -190,6 +254,34 @@ Autonomous mode for complex tasks. Follows ACE (Advanced Context Engineering) pr
    - If "Modify Plan": Ask what changes, update plan, re-confirm
    - If "More Research": Go back to Phase 1 with specific questions
    - If "Cancel": Exit gracefully with summary of work done
+
+8. **Context checkpoint (before Phase 3):**
+
+   Before starting implementation, save a checkpoint:
+
+   ```markdown
+   # Auto Checkpoint: <goal>
+   Phase: Plan Approved
+   Timestamp: <ISO timestamp>
+
+   ## Completed
+   - [x] Phase 1: Research (saved to .claude/swarm/research/<file>.md)
+   - [x] Phase 2: Planning (saved to .claude/swarm/plans/<file>.md)
+
+   ## Current State
+   Plan approved by human. Ready to begin implementation.
+
+   ## Next Steps
+   1. Execute Phase 1 of implementation plan
+   2. Continue through remaining phases
+   3. Generate completion summary
+
+   ## Key Files
+   - Research: .claude/swarm/research/<timestamp>.md
+   - Plan: .claude/swarm/plans/<timestamp>.md
+   ```
+
+   Save to `.claude/swarm/progress/auto-<timestamp>-phase2.md`
 
 ---
 
@@ -290,6 +382,28 @@ Autonomous mode for complex tasks. Follows ACE (Advanced Context Engineering) pr
 ---
 
 ## Context Management
+
+### Context Monitoring Protocol
+
+**Before each phase transition, check context usage:**
+
+| Context % | Status | Action |
+|-----------|--------|--------|
+| < 40% | Good | Continue normally |
+| 40-60% | Watch | Save checkpoint, continue |
+| 60-70% | Warning | Save checkpoint, compact working memory |
+| > 70% | Critical | Save full checkpoint, consider spawning continuation agent |
+
+**Automatic checkpoints are saved:**
+- After Phase 1 (Research) completes
+- After Phase 2 (Plan approved) completes
+- After each implementation sub-phase completes
+- When context exceeds 60% threshold
+
+**Checkpoint files enable:**
+- Session resumption with `/auto --resume`
+- Context recovery after auto-compact events
+- Handoff to continuation agents if needed
 
 ### Subagent Usage
 - Use Task tool with `subagent_type: "Explore"` for research (isolated context)

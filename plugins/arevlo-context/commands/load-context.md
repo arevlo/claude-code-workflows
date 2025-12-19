@@ -17,6 +17,7 @@ Search query: $ARGUMENTS
 ### 1. Check available sources
 Run these checks silently to determine which options to show:
 - **Local /tmp:** Check if `/tmp/claude-contexts/` directory exists
+- **Swarm Progress:** Check if `.claude/swarm/progress/` directory exists
 - **Notion:** Always available (requires Notion MCP)
 - **GitHub Issues:** Check if in a git repo with remote: `git remote get-url origin`
 - **Docs folder:** Check if `docs/context/` directory exists using Glob
@@ -30,11 +31,12 @@ ALWAYS ask the user where to search - present available options:
 Where would you like to search for context?
 
 1. Local /tmp folder                  [only if /tmp/claude-contexts exists]
-2. Notion (_clawd database)
-3. GitHub Issues (in current repo)    [only if git remote exists]
-4. Docs folder (./docs/context/)      [only if docs/context exists]
-5. Plans folder (./plans/)            [only if plans/ exists]
-6. Claude Plans (~/.claude/plans/)    [only if ~/.claude{-personal}/plans exists]
+2. Swarm checkpoints (.claude/swarm/) [only if .claude/swarm/progress exists]
+3. Notion (_clawd database)
+4. GitHub Issues (in current repo)    [only if git remote exists]
+5. Docs folder (./docs/context/)      [only if docs/context exists]
+6. Plans folder (./plans/)            [only if plans/ exists]
+7. Claude Plans (~/.claude/plans/)    [only if ~/.claude{-personal}/plans exists]
 
 Select source:
 ```
@@ -46,6 +48,29 @@ Select source:
 - If query provided, filter filenames containing the query
 - If no query, show all files (sorted by name = date)
 - Display list with filenames (which contain date and project)
+
+**If Swarm Progress:**
+- Search multiple swarm directories:
+  - `.claude/swarm/progress/*.md` - Auto checkpoints and agent progress
+  - `.claude/swarm/research/*.md` - Research phase outputs
+  - `.claude/swarm/plans/*.md` - Implementation plans
+  - `.claude/swarm/context/*.md` - Consolidated context files
+- Sort by modification date (newest first)
+- If query provided, use Grep to filter by content
+- Display with category labels:
+  ```
+  Swarm Checkpoints:
+    1. [Progress] auto-2024-12-19-phase2.md (1h ago)
+       Goal: Add user authentication
+    2. [Research] 2024-12-19-auth-research.md (2h ago)
+       Topic: Authentication patterns
+    3. [Plan] 2024-12-19-auth-plan.md (2h ago)
+       Phases: 4
+  ```
+- Extract metadata from files:
+  - Goal/Topic from first `#` heading
+  - Phase from `Phase:` line (for progress files)
+  - Number of phases from `### Phase` headings (for plans)
 
 **If Notion:**
 - Search `_clawd` database with the query

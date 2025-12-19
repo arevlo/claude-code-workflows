@@ -13,6 +13,7 @@ Slash commands for saving and loading Claude Code session context and plans to m
 ### Commands
 - `/save-context` - Save current session to multiple destinations
 - `/load-context` - Search and load prior context from multiple sources
+- `/context-status` - Check current context state and recent saves
 - `/plan` - Load, save, or browse Claude Code plans
 
 ## Storage Destinations
@@ -20,6 +21,7 @@ Slash commands for saving and loading Claude Code session context and plans to m
 | Destination | Description |
 |-------------|-------------|
 | Local /tmp | Quick, ephemeral markdown files in `/tmp/claude-contexts/` |
+| Swarm checkpoints | Auto checkpoints in `.claude/swarm/progress/` (load only) |
 | Notion | Persistent storage in your Notion database |
 | GitHub Issue | Create an issue in the current repo for tracking |
 | Docs folder | Save to `./docs/context/` in your project |
@@ -80,6 +82,15 @@ gh auth login
 - Searches your selected source
 - Shows matching results
 - Lets you select and view full content
+
+### Check Context Status
+```
+/context-status
+```
+- Shows recent saves in `/tmp/claude-contexts/`
+- Shows swarm progress checkpoints
+- Shows active `/auto` sessions
+- Shows recent swarm reports
 
 ### Continue a Plan
 ```

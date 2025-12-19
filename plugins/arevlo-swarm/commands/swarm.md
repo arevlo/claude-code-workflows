@@ -130,13 +130,13 @@ Start a multi-agent swarm for parallel task execution. Agents run in separate te
 
    **bash/zsh (macOS, Linux, Git Bash, WSL):**
    ```bash
-   mkdir -p .claude/swarm/{reports,issues,context,logs,pids}
+   mkdir -p .claude/swarm/{reports,issues,context,logs,pids,progress}
    echo "$(date -Iseconds)" > .claude/swarm/started_at
    ```
 
    **PowerShell (Windows):**
    ```powershell
-   $dirs = @('reports','issues','context','logs','pids')
+   $dirs = @('reports','issues','context','logs','pids','progress')
    $dirs | ForEach-Object { New-Item -ItemType Directory -Force -Path ".claude/swarm/$_" }
    Get-Date -Format o | Out-File .claude/swarm/started_at
    ```
@@ -341,6 +341,36 @@ When `--focus <path>` flag is used, agents only analyze files in the specified p
 - Working on specific feature area
 - Reducing noise from unrelated code
 
+## Context Protocol for Swarm Agents
+
+**All swarm agents receive these instructions to ensure graceful completion:**
+
+```markdown
+## Context Protocol
+
+You are a swarm agent with a specific analysis task. Follow these rules:
+
+1. **Complete your task efficiently** — Focus on your specific analysis scope.
+   Don't expand beyond your assigned focus area.
+
+2. **Complete gracefully** — If you sense you're running long:
+   - Wrap up your current file/section analysis
+   - Write findings so far to your report
+   - Document what remains to be analyzed
+   - Exit cleanly rather than getting cut off mid-analysis
+
+3. **Structured outputs only** — Write to `.claude/swarm/reports/{agent}-{timestamp}.md`
+   using clear sections, tables, and bullet points.
+
+4. **Limit context usage** — Reference files by path and line numbers.
+   Don't copy entire files into your context or report.
+
+5. **Prioritize findings** — Report critical issues first, then warnings, then suggestions.
+   Use severity markers: 🔴 Critical, 🟡 Warning, 🔵 Info
+```
+
+**This protocol is injected into each agent's system prompt automatically.**
+
 ## Notes
 
 - Requires Claude Code with `--dangerously-skip-permissions` enabled
@@ -348,3 +378,4 @@ When `--focus <path>` flag is used, agents only analyze files in the specified p
 - Use `/hive` to check agent status and findings
 - Use `/sync` to consolidate findings into actionable items
 - Use `/fix` to interactively address issues one by one
+- All agents follow the Context Protocol for graceful completion
