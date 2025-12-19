@@ -52,6 +52,7 @@ Slash commands for saving/loading Claude Code session context and plans.
 
 - `/save-context` - Save session to local, Notion, GitHub, or docs/plans folder
 - `/load-context` - Search and load prior context from multiple sources
+- `/context-status` - Check current context state and recent saves
 - `/plan` - Load, save, or browse Claude Code plans
 
 > **Requires:** [Notion MCP server](#notion-mcp-setup) for Notion destinations
@@ -74,7 +75,8 @@ Git commit workflows and development best practices.
 Multi-agent orchestration for parallel code analysis. Works with any project type.
 
 - `/swarm [preset]` - Start swarm (auto-detects project or use preset)
-- `/auto <goal>` - Autonomous workflow - research, plan, and implement with minimal interruption
+- `/auto <goal>` - Autonomous workflow - research, plan, and implement with checkpoints
+- `/auto --resume` - Resume from most recent checkpoint
 - `/spawn <agent>` - Spawn a single background agent
 - `/hive` - Check status and findings from all agents
 - `/fix` - Interactive fix mode - address swarm findings one by one
@@ -164,6 +166,7 @@ Run after making code changes:
 |---------|---------|
 | `/save-context` | Save session context to local, Notion, GitHub, or docs/plans |
 | `/load-context <query>` | Search and load prior contexts from multiple sources |
+| `/context-status` | Check current context state and recent saves |
 
 ### Dev Workflows
 

@@ -26,12 +26,12 @@ Spawn a single specialized agent to run analysis in the background.
 
    **bash/zsh (macOS, Linux, Git Bash, WSL):**
    ```bash
-   mkdir -p .claude/swarm/{reports,issues,logs,pids}
+   mkdir -p .claude/swarm/{reports,issues,logs,pids,progress}
    ```
 
    **PowerShell (Windows):**
    ```powershell
-   $dirs = @('reports','issues','logs','pids')
+   $dirs = @('reports','issues','logs','pids','progress')
    $dirs | ForEach-Object { New-Item -ItemType Directory -Force -Path ".claude/swarm/$_" }
    ```
 
@@ -117,8 +117,53 @@ Spawn a single specialized agent to run analysis in the background.
 /spawn type-analyzer --watch "src/plugins/**/*.tsx"
 ```
 
+## Context Protocol
+
+**Every spawned agent receives these instructions as part of their system prompt:**
+
+```markdown
+## Context Protocol
+
+You have a finite context window. Follow these rules to work efficiently:
+
+1. **Work efficiently** — Don't load unnecessary files. Read only what you need.
+
+2. **Checkpoint at natural breakpoints** — If your task is complex, save progress to
+   `.claude/swarm/progress/{agent-name}-{timestamp}.md` before moving to the next subtask.
+
+3. **Complete gracefully** — If you sense you're running long or approaching limits,
+   wrap up your current work and document next steps rather than getting cut off.
+
+4. **Structured outputs** — Write findings to `.claude/swarm/reports/` in structured
+   markdown format. Use tables, bullet points, and clear sections.
+
+5. **Limit file reads** — Summarize relevant code rather than copying entire files.
+   Reference file paths and line numbers instead of full content.
+
+Checkpoint format:
+```
+# Agent Checkpoint: {agent-name}
+Timestamp: {ISO timestamp}
+Task: {what you were analyzing}
+
+## Progress
+- [x] Completed subtask 1
+- [x] Completed subtask 2
+- [ ] Remaining subtask 3
+
+## Findings So Far
+{Key discoveries written to reports}
+
+## Next Steps
+{What continuation should do}
+```
+```
+
+**This protocol is automatically injected when spawning agents.**
+
 ## Notes
 
 - Each agent runs independently with its own context
 - Reports are timestamped and accumulated in `.claude/swarm/reports/`
 - Logs are available in `.claude/swarm/logs/<agent>.log`
+- Agents self-manage context through the Context Protocol

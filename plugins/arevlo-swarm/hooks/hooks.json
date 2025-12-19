@@ -1,0 +1,17 @@
+{
+  "description": "Context management safety net for swarm workflows",
+  "hooks": {
+    "PreCompact": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/precompact-save.sh",
+            "timeout": 30000
+          }
+        ]
+      }
+    ]
+  }
+}
