@@ -15,18 +15,20 @@ Manage Claude Code plans - load from multiple sources, save for context preserva
 
 ## Detect Plans Directory
 
-First, detect the active Claude plans directory:
+Claude Code stores plans in the config directory. Check both possible locations (personal config takes priority):
 
 ```bash
-# Check if plans directory exists
-if [ -d "$HOME/.claude/plans" ]; then
+# Check personal config first, then standard
+if [ -d "$HOME/.claude-personal/plans" ] && ls "$HOME/.claude-personal/plans"/*.md >/dev/null 2>&1; then
+  echo "$HOME/.claude-personal/plans"
+elif [ -d "$HOME/.claude/plans" ] && ls "$HOME/.claude/plans"/*.md >/dev/null 2>&1; then
   echo "$HOME/.claude/plans"
 else
   echo "none"
 fi
 ```
 
-Store this path for use in subsequent steps.
+Store this path as `$PLANS_DIR` for use in subsequent steps.
 
 ## Route by Argument
 
@@ -94,7 +96,10 @@ Save the current conversation's plan to a chosen destination for context preserv
 
 Check if there's an active plan file mentioned in the conversation:
 - Look for plan file paths in recent system messages
-- Check if `$HOME/.claude/plans/` has any recently modified files (< 1 hour)
+- Check both directories for recently modified files (< 1 hour):
+  ```bash
+  find "$HOME/.claude-personal/plans" "$HOME/.claude/plans" -name "*.md" -mmin -60 2>/dev/null | head -1
+  ```
 
 If a plan file is found:
 - Read its content
@@ -108,19 +113,21 @@ If no plan file found:
 ```
 Where would you like to save this plan?
 
-1. Local Claude Plans (~/.claude/plans/)  - Quick, stays in Claude config
-2. Notion (_clawd database)               - Persistent, searchable, tagged
-3. GitHub Issue                           - Trackable, collaborative
+1. Local Claude Plans ($PLANS_DIR)  - Quick, stays in Claude config
+2. Notion (_clawd database)         - Persistent, searchable, tagged
+3. GitHub Issue                     - Trackable, collaborative
 
 Select destination:
 ```
+
+Use the `$PLANS_DIR` detected earlier (either `~/.claude-personal/plans` or `~/.claude/plans`).
 
 ### 3. Save to selected destination
 
 **If Local Claude Plans:**
 - Generate filename: `{slug-from-title}.md` or use existing filename
-- Write to plans directory using Write tool
-- Confirm: "Plan saved to ~/.claude/plans/{filename}"
+- Write to `$PLANS_DIR` using Write tool
+- Confirm: "Plan saved to $PLANS_DIR/{filename}"
 
 **If Notion:**
 - Use `mcp__notion__notion-create-pages` to create a new page in `_clawd` database
@@ -172,8 +179,8 @@ Search for plans across all sources.
 ### 1. Search local plans
 
 ```bash
-# Search in filenames and content
-grep -l -i "{query}" "$PLANS_DIR"/*.md 2>/dev/null
+# Search in filenames and content across both directories
+grep -l -i "{query}" "$HOME/.claude-personal/plans"/*.md "$HOME/.claude/plans"/*.md 2>/dev/null
 ```
 
 ### 2. Search Notion (if available)
@@ -192,13 +199,14 @@ gh issue list --search "{query} label:plan" --json number,title,createdAt --limi
 Search results for "{query}":
 
 Local Plans:
-  1. [2024-12-18] Design Token Pipeline - ~/.claude/plans/design-tokens.md
+  1. [2024-12-18] Design Token Pipeline - ~/.claude-personal/plans/design-tokens.md
+  2. [2024-12-17] API Refactor - ~/.claude/plans/api-refactor.md
 
 Notion:
-  2. [2024-12-15] API Design Spec - notion.so/...
+  3. [2024-12-15] API Design Spec - notion.so/...
 
 GitHub Issues:
-  3. [2024-12-10] #42: Plan: Authentication Flow
+  4. [2024-12-10] #42: Plan: Authentication Flow
 
 Select a result to load (1-10), or 'q' to cancel:
 ```
