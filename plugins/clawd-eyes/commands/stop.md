@@ -11,20 +11,18 @@ Stop all clawd-eyes processes and free up the ports.
 
 1. **Kill processes on all clawd-eyes ports**
    ```bash
-   lsof -ti :4000 | xargs kill -9 2>/dev/null
-   lsof -ti :4001 | xargs kill -9 2>/dev/null
-   lsof -ti :5173 | xargs kill -9 2>/dev/null
-   lsof -ti :9222 | xargs kill -9 2>/dev/null
+   lsof -ti :4000 :4001 :5173 2>/dev/null | xargs kill -9 2>/dev/null; echo "Processes killed"
    ```
 
 2. **Verify ports are free**
    ```bash
-   lsof -i :4000 2>/dev/null | grep LISTEN || lsof -i :4001 2>/dev/null | grep LISTEN || lsof -i :5173 2>/dev/null | grep LISTEN || lsof -i :9222 2>/dev/null | grep LISTEN || echo "All ports free"
+   lsof -i :4000,:4001,:5173 2>/dev/null | grep LISTEN || echo "All ports free"
    ```
 
 3. **Report to user**
    - Confirm processes were stopped
    - Confirm all ports are now free
+   - The browser window will close automatically
 
 ## Ports Killed
 
@@ -33,10 +31,9 @@ Stop all clawd-eyes processes and free up the ports.
 | 4000 | HTTP API |
 | 4001 | WebSocket |
 | 5173 | Web UI (Vite) |
-| 9222 | Chrome DevTools Protocol |
 
 ## Notes
 
 - Some ports may already be free - that's fine
-- Port 9222 is Chrome's CDP port - killing it closes the browser
+- Killing the backend also closes the browser (managed by Playwright)
 - After stopping, restart with `/clawd-eyes:start`

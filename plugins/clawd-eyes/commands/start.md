@@ -9,40 +9,45 @@ Start the clawd-eyes visual browser inspector servers.
 
 ## Instructions
 
-1. **Find the clawd-eyes project:**
-   - Search for a directory containing `clawd-eyes` with a `package.json` that has `"name": "clawd-eyes"`
-   - Check common locations: current directory, parent directories, or ask the user
-   - If not found, ask the user for the path to their clawd-eyes installation
+1. **Find the clawd-eyes project directory:**
+   - Check if current directory is clawd-eyes: `cat package.json 2>/dev/null | grep '"name": "clawd-eyes"'`
+   - Check common locations: `~/clawd-eyes`, `~/projects/clawd-eyes`, `~/Desktop/clawd-eyes`
+   - Search for it: `find ~ -maxdepth 4 -name "clawd-eyes" -type d 2>/dev/null | head -5`
+   - If not found, ask the user for the path
 
 2. **Kill any existing processes on clawd-eyes ports:**
    ```bash
-   lsof -ti :4000 | xargs kill -9 2>/dev/null
-   lsof -ti :4001 | xargs kill -9 2>/dev/null
-   lsof -ti :5173 | xargs kill -9 2>/dev/null
-   lsof -ti :9222 | xargs kill -9 2>/dev/null
+   lsof -ti :4000 :4001 :5173 2>/dev/null | xargs kill -9 2>/dev/null; echo "Ports cleared"
    ```
 
-3. **Start the servers** from the clawd-eyes directory:
-
-   **Start backend** (in background):
+3. **Start the backend server** (runs in background, launches Chromium):
    ```bash
-   cd <clawd-eyes-path> && npm start &
+   cd <clawd-eyes-path> && npm start
    ```
+   Run this in background mode using the Bash tool's `run_in_background` parameter.
 
-   **Start web UI** (in background):
+4. **Wait for backend to initialize** (2-3 seconds for browser to launch)
+
+5. **Start the web UI** (runs in background):
    ```bash
-   cd <clawd-eyes-path>/web && npm run dev &
+   cd <clawd-eyes-path>/web && npm run dev
+   ```
+   Run this in background mode using the Bash tool's `run_in_background` parameter.
+
+6. **Wait for Vite to start** (1-2 seconds)
+
+7. **Verify services are running:**
+   ```bash
+   echo "=== clawd-eyes Status ===" && \
+   echo "Backend API (4000): $(lsof -i :4000 2>/dev/null | grep LISTEN > /dev/null && echo 'Running' || echo 'Not running')" && \
+   echo "WebSocket (4001): $(lsof -i :4001 2>/dev/null | grep LISTEN > /dev/null && echo 'Running' || echo 'Not running')" && \
+   echo "Web UI (5173): $(lsof -i :5173 2>/dev/null | grep LISTEN > /dev/null && echo 'Running' || echo 'Not running')"
    ```
 
-4. Wait a few seconds for servers to start
-
-5. Report the status:
-   - Backend API: http://localhost:4000
-   - WebSocket: ws://localhost:4001
+8. **Report to user:**
    - Web UI: http://localhost:5173
-   - CDP: ws://localhost:9222
-
-6. Inform the user they can open http://localhost:5173 in their browser
+   - A browser window should have opened
+   - They can navigate to any URL in the browser, then use the web UI to inspect elements
 
 ## Ports Used
 
@@ -51,4 +56,9 @@ Start the clawd-eyes visual browser inspector servers.
 | 4000 | HTTP API |
 | 4001 | WebSocket (live updates) |
 | 5173 | Web UI (Vite dev server) |
-| 9222 | Chrome DevTools Protocol |
+
+## Notes
+
+- Backend launches a browser via Playwright for page capture
+- If extension support is configured in browser.ts, it will load the extension
+- User can configure viewport size and scale factor in browser.ts

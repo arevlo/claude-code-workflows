@@ -15,13 +15,17 @@ Monitor for incoming design requests from the clawd-eyes web UI.
    ```
    If not running, tell user to run `/clawd-eyes:start` first.
 
-2. **Find the clawd-eyes data directory**
-   - Look for `~/clawd-eyes/data/pending-request.json`
-   - Or search common locations: `~/Desktop/clawd-eyes`, `~/projects/clawd-eyes`
+2. **Find the clawd-eyes data directory:**
+   - Check common locations for `data/pending-request.json`:
+     - Current directory: `./data/pending-request.json`
+     - Home: `~/clawd-eyes/data/pending-request.json`
+     - Projects: `~/projects/clawd-eyes/data/pending-request.json`
+   - Or search: `find ~ -maxdepth 5 -path "*/clawd-eyes/data/pending-request.json" 2>/dev/null | head -1`
+   - If not found, ask the user for the clawd-eyes path
 
 3. **Check for pending request**
    ```bash
-   cat ~/clawd-eyes/data/pending-request.json 2>/dev/null
+   cat <clawd-eyes-path>/data/pending-request.json 2>/dev/null || echo "No pending request"
    ```
 
 4. **If request exists:**
@@ -32,14 +36,6 @@ Monitor for incoming design requests from the clawd-eyes web UI.
 
 5. **If no request:**
    - Tell user: "No pending request. Select an element in the clawd-eyes web UI and click 'Send to clawd-eyes'."
-   - Optionally poll again in a few seconds (ask user if they want to wait)
-
-## File Location
-
-The pending request is stored at:
-```
-<clawd-eyes-path>/data/pending-request.json
-```
 
 ## Request Format
 
@@ -49,6 +45,7 @@ The pending request is stored at:
   "instruction": "User's design instruction",
   "css": { "width": "100px", ... },
   "boundingBox": { "x": 0, "y": 0, "width": 100, "height": 50 },
+  "url": "https://example.com",
   "timestamp": 1234567890
 }
 ```

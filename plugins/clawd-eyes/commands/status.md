@@ -12,10 +12,9 @@ Check if clawd-eyes services are running.
 1. **Check each port for running services**
    ```bash
    echo "=== clawd-eyes Status ===" && \
-   echo "HTTP API (4000): $(lsof -i :4000 2>/dev/null | grep LISTEN > /dev/null && echo 'Running' || echo 'Not running')" && \
+   echo "Backend API (4000): $(lsof -i :4000 2>/dev/null | grep LISTEN > /dev/null && echo 'Running' || echo 'Not running')" && \
    echo "WebSocket (4001): $(lsof -i :4001 2>/dev/null | grep LISTEN > /dev/null && echo 'Running' || echo 'Not running')" && \
-   echo "Web UI (5173): $(lsof -i :5173 2>/dev/null | grep LISTEN > /dev/null && echo 'Running' || echo 'Not running')" && \
-   echo "Chrome CDP (9222): $(lsof -i :9222 2>/dev/null | grep LISTEN > /dev/null && echo 'Running' || echo 'Not running')"
+   echo "Web UI (5173): $(lsof -i :5173 2>/dev/null | grep LISTEN > /dev/null && echo 'Running' || echo 'Not running')"
    ```
 
 2. **Report to user**
@@ -30,4 +29,3 @@ Check if clawd-eyes services are running.
 | Web UI | http://localhost:5173 |
 | API | http://localhost:4000 |
 | WebSocket | ws://localhost:4001 |
-| CDP | ws://localhost:9222 |
