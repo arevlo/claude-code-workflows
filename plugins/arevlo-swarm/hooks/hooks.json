@@ -1,6 +1,30 @@
 {
-  "description": "Context management safety net for swarm workflows",
+  "description": "Context management and health tracking for swarm workflows",
   "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/session-init.sh",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/health-tick.sh",
+            "timeout": 2000
+          }
+        ]
+      }
+    ],
     "PreCompact": [
       {
         "matcher": "",

@@ -14,6 +14,7 @@ Slash commands for saving and loading Claude Code session context and plans to m
 - `/save-context` - Save current session to multiple destinations
 - `/load-context` - Search and load prior context from multiple sources
 - `/context-status` - Check current context state and recent saves
+- `/checkpoint` - Quick checkpoint for mid-task saves (faster than /save-context)
 - `/plan` - Load, save, or browse Claude Code plans
 
 ## Storage Destinations
@@ -91,6 +92,16 @@ gh auth login
 - Shows swarm progress checkpoints
 - Shows active `/auto` sessions
 - Shows recent swarm reports
+
+### Quick Checkpoint (Mid-Task)
+```
+/checkpoint
+/checkpoint "before-refactor"
+```
+- Fast checkpoint without interactive prompts
+- Designed for mid-task use when you want a quick save point
+- Saves to `.claude/swarm/progress/checkpoint-{timestamp}-{label}.md`
+- Use before risky changes or when context feels heavy
 
 ### Continue a Plan
 ```

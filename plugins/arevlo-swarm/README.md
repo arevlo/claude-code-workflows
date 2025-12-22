@@ -43,6 +43,7 @@ The swarm plugin enables a "hive mind" approach to code analysis and **autonomou
 | `/swarm [preset]` | Start multi-agent swarm with preset or auto-detect |
 | `/spawn <agent>` | Spawn a single background agent |
 | `/hive` | Check status and findings from all agents |
+| `/health` | Check context health metrics and alerts |
 | `/sync` | Consolidate findings into prioritized action items |
 | `/fix` | Interactive mode to fix issues (manual or automatic) |
 | `/stop [agent]` | Stop one or all running agents |
@@ -205,6 +206,26 @@ The swarm approach helps manage context limits:
 - Agents write findings to files (not accumulating in your session)
 - You load only what you need via `/sync` or `/load-context swarm`
 
+### Context Health Tracking
+
+The swarm plugin includes background health tracking via hooks:
+
+**Hooks installed:**
+- `SessionStart` - Initializes metrics tracking at session start
+- `PostToolUse` - Tracks proxy signals after each tool use
+- `PreCompact` - Emergency save at 80% threshold
+
+**Check health anytime:**
+```bash
+/health
+```
+
+Shows current metrics:
+- File reads (threshold: 50)
+- Code edits (threshold: 30)
+- Message weight (threshold: 30)
+- Alert level (GOOD → WATCH → WARNING → CRITICAL)
+
 ### Context Protocol
 
 All agents follow a context protocol for graceful operation:
@@ -216,9 +237,20 @@ All agents follow a context protocol for graceful operation:
 | 60-70% | Warning | Compact and checkpoint |
 | > 70% | Critical | Complete gracefully, save state |
 
+**Alert levels based on proxy signals:**
+
+| Warning Signals | Level | Recommended Action |
+|-----------------|-------|-------------------|
+| 0-1 | GOOD | Continue normally |
+| 2 | WATCH | Consider `/checkpoint` soon |
+| 3 | WARNING | `/checkpoint` now, consider wrapping up |
+| 4+ | CRITICAL | Save immediately, complete gracefully |
+
 **Automatic features:**
+- Health metrics tracked via `PostToolUse` hook
+- Alerts written to `.claude/swarm/guardian/alerts.md`
 - Checkpoints saved at phase transitions
-- Emergency saves triggered before auto-compact (via PreCompact hook)
+- Emergency saves triggered before auto-compact (via PreCompact hook at 80%)
 - Agents complete gracefully rather than getting cut off
 - Use `/load-context` → "Swarm checkpoints" to recover
 
