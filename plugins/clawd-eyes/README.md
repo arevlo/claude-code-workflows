@@ -1,6 +1,6 @@
 # clawd-eyes
 
-Slash commands for managing clawd-eyes visual browser inspector.
+Visual browser inspector with AI-powered element finding and Chrome DevTools integration.
 
 ## Commands
 
@@ -11,6 +11,33 @@ Slash commands for managing clawd-eyes visual browser inspector.
 | `/clawd-eyes:status` | Check if services are running |
 | `/clawd-eyes:open` | Open the web UI in default browser |
 | `/clawd-eyes:watch` | Check for pending design requests |
+| `/clawd-eyes:inspect-network` | Inspect network requests using Chrome DevTools |
+| `/clawd-eyes:read-console` | Read browser console messages for debugging |
+
+## Agents
+
+clawd-eyes includes specialized AI agents for enhanced workflows:
+
+### Element Finder Agent
+**Name:** `element-finder`
+**When to use:** Locate page elements by natural language description
+**Example:** "Find the login button" or "Locate the main navigation menu"
+
+The agent uses Claude Code's Chrome integration to find elements programmatically, returning selectors and coordinates that can be viewed in the clawd-eyes UI.
+
+**Requirements:** `/chrome` must be enabled in Claude Code
+
+### Design Orchestrator Agent
+**Name:** `design-orchestrator`
+**When to use:** Automatically process design requests end-to-end
+**Workflow:**
+1. Detects pending design requests from clawd-eyes
+2. Fetches design context (screenshot, CSS, instruction)
+3. Analyzes requested changes
+4. Implements CSS/HTML modifications
+5. Clears request when complete
+
+**Usage:** The agent works proactively when design requests are detected, or can be invoked explicitly when working with clawd-eyes.
 
 ## Prerequisites
 
@@ -67,6 +94,25 @@ args: ['--remote-debugging-port=9222']
 - **Web UI** (`web/`): React app for viewing page screenshots and selecting elements
 - **MCP Server**: Exposes `get_design_context`, `clear_design_context`, `list_elements` tools
 
+## Chrome Integration
+
+Some commands and agents require **Claude Code's Chrome integration** (`/chrome`):
+
+- **Element Finder Agent** - Uses `mcp__claude-in-chrome__find` to locate elements
+- **Network Inspector** - Uses `mcp__claude-in-chrome__read_network_requests`
+- **Console Reader** - Uses `mcp__claude-in-chrome__read_console_messages`
+
+**To enable Chrome integration:**
+1. Run `/chrome` in Claude Code
+2. Select "Enabled by default"
+3. Or start with `claude --chrome`
+
+**Benefits:**
+- Programmatic element finding by description
+- Network request debugging
+- Console log monitoring
+- Combines visual UI (clawd-eyes) with automation (Chrome integration)
+
 ## How It Works
 
 1. Backend connects to browser via CDP (port 9222)
@@ -75,3 +121,4 @@ args: ['--remote-debugging-port=9222']
 4. Web UI displays screenshot with element overlays
 5. User selects elements and sends design requests
 6. MCP tools expose the data to Claude Code
+7. AI agents automate workflows and debugging tasks
