@@ -173,6 +173,29 @@ If `--resume` flag is provided:
 
    Save to `.claude/swarm/progress/auto-<timestamp>-phase1.md`
 
+6. **Export full session (Phase 1 complete):**
+
+   Prompt user to preserve the full research session:
+
+   ```
+   Phase 1 (Research) complete.
+
+   Please run the following command to preserve full session:
+
+   /export
+
+   Save to: .claude/swarm/exports/auto-phase1-complete-<timestamp>.txt
+
+   (You can download the export or copy to clipboard, then save to the path above)
+   ```
+
+   Wait for user confirmation that export was saved.
+
+   After export, **compact working memory:**
+   - Drop conversation details
+   - Keep research findings summary
+   - Reference full export if details needed
+
 ---
 
 ### Phase 2: Planning
@@ -282,6 +305,29 @@ If `--resume` flag is provided:
    ```
 
    Save to `.claude/swarm/progress/auto-<timestamp>-phase2.md`
+
+9. **Export full session (Phase 2 approved):**
+
+   Prompt user to preserve the full planning session:
+
+   ```
+   Phase 2 (Planning) approved and ready for implementation.
+
+   Please run the following command to preserve full session:
+
+   /export
+
+   Save to: .claude/swarm/exports/auto-phase2-approved-<timestamp>.txt
+
+   (You can download the export or copy to clipboard, then save to the path above)
+   ```
+
+   Wait for user confirmation that export was saved.
+
+   After export, **compact working memory:**
+   - Drop planning discussion details
+   - Keep plan summary
+   - Reference full export if details needed
 
 ---
 

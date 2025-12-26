@@ -1,5 +1,5 @@
 {
   "name": "arevlo-swarm",
-  "description": "Multi-agent orchestration with context-aware checkpoints - autonomous workflows with resume, graceful completion, and PreCompact safety net",
-  "version": "1.6.0"
+  "description": "Multi-agent orchestration with context awareness - proxy signal monitoring, /export integration, checkpoints, compaction, resume, and handoff capabilities",
+  "version": "1.7.0"
 }
