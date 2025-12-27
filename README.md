@@ -1,222 +1,718 @@
 # Claude Code Workflows
 
-A curated collection of Claude Code plugins with slash commands for design-to-code workflows, context management, multi-agent orchestration, and development best practices.
+A curated collection of Claude Code plugins providing slash commands for design-to-code workflows, context management, multi-agent orchestration, development automation, and visual browser inspection.
 
 ## Installation
+
+### Quick Start
 
 1. Run `/plugin`
 2. Select **Add Marketplace**
 3. Enter marketplace source: `arevlo/claude-code-workflows`
 4. Select which plugins to install
 
-Or use commands directly:
+### Command Line
+
 ```bash
 # Add marketplace
 /plugin marketplace add arevlo/claude-code-workflows
 
 # Install specific plugins
-/plugin install arevlo-design@claude-code-workflows
 /plugin install arevlo-context@claude-code-workflows
+/plugin install arevlo-design@claude-code-workflows
 /plugin install arevlo-dev@claude-code-workflows
 /plugin install arevlo-swarm@claude-code-workflows
 /plugin install clawd-eyes@claude-code-workflows
 ```
 
-## Updating
+### Updating
 
-1. Run `/plugin`
-2. Select **Manage Marketplaces**
-3. Select `claude-code-workflows` and choose **Update**
-4. Go back and select **Browse and Install Plugins** to install any new plugins
-
-> **Note:** If you don't see a plugin after updating, go to **Browse and Install Plugins** and install it manually.
-
-Or use commands:
 ```bash
+# Update marketplace
 /plugin marketplace update claude-code-workflows
+
+# Then browse and install any new plugins
+/plugin
+# → Browse and Install Plugins
 ```
 
 ## Plugins
 
-### arevlo-design
-
-Slash commands for Figma Make design-to-code workflows.
-
-- `/make` - Create or update prompts/changelogs in Notion for Figma Make
-
-> **Requires:** [Notion MCP server](#notion-mcp-setup)
-
 ### arevlo-context
 
-Slash commands for saving/loading Claude Code session context and plans.
+**Session context and plan management with multi-source storage.**
 
-- `/save-context` - Save session to local, Notion, GitHub, or docs/plans folder
-- `/load-context` - Search and load prior context from multiple sources
-- `/context-status` - Check current context state and recent saves
-- `/plan` - Load, save, or browse Claude Code plans
+Save and load Claude Code session context to multiple destinations including local storage, Notion, GitHub Issues, and project docs.
 
-> **Requires:** [Notion MCP server](#notion-mcp-setup) for Notion destinations
+#### Commands
+
+| Command | Description |
+|---------|-------------|
+| `/arevlo-context:save-context` | Save current session to local, Notion, GitHub, or docs |
+| `/arevlo-context:load-context <query>` | Search and load prior context from multiple sources |
+| `/arevlo-context:context-status` | Check current context state and recent saves |
+| `/arevlo-context:checkpoint [label]` | Quick checkpoint for mid-task saves (faster than save-context) |
+| `/arevlo-context:plan` | Load, save, or browse Claude Code plans |
+
+#### Storage Destinations
+
+| Destination | Description | Location |
+|-------------|-------------|----------|
+| **Local /tmp** | Quick, ephemeral saves | `/tmp/claude-contexts/` |
+| **Swarm checkpoints** | Auto checkpoints from /auto | `.claude/swarm/progress/` |
+| **Notion** | Persistent storage | `_clawd` database |
+| **GitHub Issue** | Issue tracking in current repo | Creates GitHub issue |
+| **Docs folder** | Project documentation | `./docs/context/` |
+| **Claude Plans** | Saved plans | `~/.claude/plans/` |
+
+#### Workflow Example
+
+```bash
+# End of session
+/arevlo-context:save-context
+# → Select destination (local, Notion, GitHub, docs)
+# → Choose tag type (Context, Summary, Spec, Reference)
+# → Auto-generates comprehensive summary
+
+# Start of session
+/arevlo-context:load-context "authentication implementation"
+# → Choose source to search
+# → Select and load previous context
+
+# Mid-task checkpoint
+/arevlo-context:checkpoint "before-refactor"
+# → Fast save without prompts
+
+# Check status
+/arevlo-context:context-status
+# → Shows recent saves and checkpoints
+
+# Continue a plan
+/arevlo-context:plan
+# → Browse and load recent plans
+```
+
+#### Requirements
+
+- **Optional:** Notion MCP server for Notion destinations
+- **Optional:** GitHub CLI (`gh`) for GitHub Issue destinations
+
+---
+
+### arevlo-design
+
+**Figma Make design-to-code workflow integration.**
+
+Create and manage prompts/changelogs in Notion for Figma Make, enabling design-to-code workflows with proper documentation and iteration tracking.
+
+#### Commands
+
+| Command | Description |
+|---------|-------------|
+| `/arevlo-design:make` | Create or update prompts/changelogs in Notion for Figma Make |
+
+#### Workflow
+
+```
+1. Create Spec
+   ↓
+   /arevlo-context:save-context (tag: Spec)
+   ↓
+2. Create Prompt
+   ↓
+   /arevlo-design:make (references saved spec)
+   ↓
+3. Figma Make Implementation
+   ↓
+4. Iteration (repeat /make for updates)
+```
+
+#### Prompt Best Practices
+
+When creating prompts for Figma Make:
+- Specify **full file paths** (e.g., `src/components/` not `components/`)
+- Note file sizes if large (>30KB)
+- List ALL files that need modification together
+- Provide exact code snippets to insert
+- Include verification steps
+- Link to related context/specs in Notion
+
+#### Requirements
+
+- **Notion MCP server** configured in Claude Code
+- **Notion database** for storing prompts (default name: `_make`)
+
+---
 
 ### arevlo-dev
 
-Git commit workflows and development best practices.
+**Git workflows, PR management, and development automation.**
 
-- `/commit` - Full commit workflow with branch management
-- `/pr-describe` - Generate/update PR descriptions
-- `/pr-review` - Request AI code review
-- `/release <version>` - Create semver release with tag and GitHub release
-- `/kill-port` - Check and kill processes using specific ports
-- `/resolve` - Resolve merge conflicts interactively
+Streamline git operations with conventional commits, PR descriptions, code reviews, and release management.
 
-> **Requires:** [GitHub CLI](#github-cli-setup)
+#### Commands
+
+| Command | Description |
+|---------|-------------|
+| `/arevlo-dev:commit` | Full commit workflow with branch management and PR updates |
+| `/arevlo-dev:pr-describe` | Generate/update PR description from all changes since main |
+| `/arevlo-dev:pr-review` | Request AI code review via GitHub comment (@claude or @codex) |
+| `/arevlo-dev:release <version>` | Create semver release with tag and GitHub release notes |
+| `/arevlo-dev:kill-port <port>` | Check and kill processes using specific ports |
+| `/arevlo-dev:resolve` | Interactive merge conflict resolution with AI assistance |
+
+#### Commit Workflow
+
+```bash
+# After making code changes
+/arevlo-dev:commit
+
+# What it does:
+# 1. Checks if branch PR was already merged (prevents lost commits)
+# 2. Detects multi-repo scenarios
+# 3. Shows what will be committed
+# 4. Generates conventional commit message
+# 5. Updates PR description if PR exists
+# 6. Pushes with confirmation
+```
+
+#### Commit Message Format
+
+```
+type: brief description (50 chars max)
+```
+
+**Types:**
+- `feat:` - New feature
+- `fix:` - Bug fix
+- `docs:` - Documentation
+- `style:` - Formatting
+- `refactor:` - Code restructure
+- `test:` - Tests
+- `chore:` - Maintenance
+
+#### Release Workflow
+
+```bash
+# Patch version (1.6.0 → 1.6.1)
+/arevlo-dev:release patch
+
+# Minor version (1.6.0 → 1.7.0)
+/arevlo-dev:release minor
+
+# Major version (1.6.0 → 2.0.0)
+/arevlo-dev:release major
+
+# Explicit version
+/arevlo-dev:release 2.1.0
+```
+
+#### Merge Conflict Resolution
+
+```bash
+/arevlo-dev:resolve
+
+# Interactive workflow:
+# 1. Detects conflicts in current repo
+# 2. Shows each conflict with context
+# 3. Offers resolution strategies
+# 4. Implements chosen resolution
+# 5. Continues to next conflict
+```
+
+#### Requirements
+
+- **GitHub CLI** (`gh`) installed and authenticated
+- Git repository with remote configured
+
+---
 
 ### arevlo-swarm
 
-Multi-agent orchestration for parallel code analysis. Works with any project type.
+**Multi-agent orchestration with autonomous workflows and ACE context management.**
 
-- `/swarm [preset]` - Start swarm (auto-detects project or use preset)
-- `/auto <goal>` - Autonomous workflow - research, plan, and implement with checkpoints
-- `/auto --resume` - Resume from most recent checkpoint
-- `/spawn <agent>` - Spawn a single background agent
-- `/hive` - Check status and findings from all agents
-- `/fix` - Interactive fix mode - address swarm findings one by one
-- `/sync` - Consolidate findings into prioritized action items
-- `/stop [agent]` - Stop one or all running agents
+Enable parallel code analysis with specialized AI agents and autonomous research-plan-implement workflows for complex tasks.
 
-**Presets:** `review`, `quality`, `security`, `cleanup`, `full`, `figma`
+#### Commands
 
-**Agents:** reviewer, simplifier, type-analyzer, silent-hunter, comment-analyzer, test-analyzer
+| Command | Description |
+|---------|-------------|
+| `/arevlo-swarm:auto <goal>` | Autonomous workflow - research, plan, implement with checkpoints |
+| `/arevlo-swarm:auto --resume` | Resume from most recent checkpoint |
+| `/arevlo-swarm:swarm [preset]` | Start multi-agent swarm with preset or auto-detect |
+| `/arevlo-swarm:spawn <agent>` | Spawn a single background agent for specific analysis |
+| `/arevlo-swarm:hive` | Check status and findings from all running agents |
+| `/arevlo-swarm:health` | Check context health metrics and alerts |
+| `/arevlo-swarm:sync` | Consolidate findings into prioritized action items |
+| `/arevlo-swarm:fix` | Interactive mode to address swarm findings one by one |
+| `/arevlo-swarm:stop [agent]` | Stop one or all running agents |
+| `/arevlo-swarm:checkpoint [label]` | Create checkpoint during /auto sessions |
+| `/arevlo-swarm:handoff` | Prepare handoff when approaching context limits |
+| `/arevlo-swarm:resume` | Resume from a prior checkpoint or auto phase |
+| `/arevlo-swarm:compact` | Export session then compact working memory |
 
-> **Requires:** `--dangerously-skip-permissions` enabled
+#### Autonomous Workflow
+
+For complex tasks requiring research, planning, and implementation:
+
+```bash
+/arevlo-swarm:auto "add user authentication with OAuth"
+
+# Phase 1: Research
+# - Explores codebase in isolated context
+# - Produces structured findings
+# - Saves checkpoint
+
+# Phase 2: Plan
+# - Creates phase-by-phase implementation blueprint
+# - Waits for human approval (high leverage point)
+# - Saves plan checkpoint
+
+# Phase 3: Implement
+# - Executes plan phase by phase
+# - Auto-saves checkpoints after each phase
+# - Monitors context usage
+
+# Resume interrupted session
+/arevlo-swarm:auto --resume
+```
+
+#### Parallel Analysis Workflow
+
+For code review and quality analysis:
+
+```bash
+# Auto-detect project and recommend agents
+/arevlo-swarm:swarm
+
+# Or use a preset
+/arevlo-swarm:swarm review
+
+# Check agent status and findings
+/arevlo-swarm:hive
+
+# Consolidate all findings
+/arevlo-swarm:sync
+
+# Fix issues interactively
+/arevlo-swarm:fix
+
+# Stop when done
+/arevlo-swarm:stop
+```
+
+#### Available Presets
+
+| Preset | Agents | Use Case |
+|--------|--------|----------|
+| `review` | reviewer, simplifier, comment-analyzer | General code review |
+| `quality` | reviewer, type-analyzer, test-analyzer | Code quality & correctness |
+| `security` | silent-hunter, reviewer | Error handling & safety |
+| `cleanup` | simplifier, comment-analyzer | Tech debt reduction |
+| `full` | All agents | Comprehensive analysis |
+| `figma` | reviewer, type-analyzer, silent-hunter | Figma plugin development |
+
+#### Available Agents
+
+**Analysis Agents:**
+| Agent | Focus | Best For |
+|-------|-------|----------|
+| `reviewer` | Code quality, patterns, best practices | Any project |
+| `simplifier` | Complexity reduction, DRY violations | Refactoring, brownfield |
+| `type-analyzer` | TypeScript type safety | TypeScript projects |
+| `silent-hunter` | Unhandled async, silent failures | Async code, error handling |
+| `comment-analyzer` | TODOs, FIXMEs, documentation debt | Cleanup, documentation |
+| `test-analyzer` | Test coverage and quality | Testing improvements |
+
+**Orchestration Agents:**
+| Agent | Focus | Best For |
+|-------|-------|----------|
+| `researcher` | Deep codebase exploration | /auto research phase |
+| `coordinator` | Prioritize and group issues | Multi-agent coordination |
+
+#### Context Health Monitoring
+
+```bash
+/arevlo-swarm:health
+
+# Shows metrics:
+# - File reads (threshold: 50)
+# - Code edits (threshold: 30)
+# - Message weight (threshold: 30)
+# - Alert level (GOOD → WATCH → WARNING → CRITICAL)
+```
+
+**Automatic Features:**
+- Health metrics tracked via hooks
+- Checkpoints saved at 40%, 60%, 70% thresholds
+- Emergency saves before auto-compact (80%)
+- Graceful completion when nearing limits
+
+#### Shared State Directory
+
+Agents communicate through `.claude/swarm/`:
+
+```
+.claude/swarm/
+├── research/       # /auto Phase 1 outputs
+├── plans/          # /auto Phase 2 outputs
+├── progress/       # Checkpoints (auto + agents)
+├── reports/        # Agent findings (timestamped)
+├── issues/         # Extracted issues
+├── context/        # Shared state
+├── logs/           # Agent logs
+├── pids/           # Process IDs
+└── sync/           # Consolidated reports
+```
+
+#### Interactive Fix Mode
+
+```bash
+/arevlo-swarm:fix
+
+# Workflow:
+# 1. Shows issue and current code
+# 2. Offers: Fix, Skip, or View more context
+# 3. Implements fix and shows diff
+# 4. Continues to next issue
+# 5. Tracks progress through queue
+```
+
+#### Requirements
+
+- **Claude Code** with plugin support
+- `--dangerously-skip-permissions` enabled for background agents
+- **Platforms:** macOS, Linux, Windows (PowerShell, Git Bash, or WSL)
+
+---
 
 ### clawd-eyes
 
-> **⚠️ In Development:** This plugin is still being developed. The repository is not yet publicly available.
+**Visual browser inspector with Chrome DevTools integration.**
 
-Visual browser inspector for Claude Code. Control the clawd-eyes servers.
+> **⚠️ In Development:** The clawd-eyes repository is currently under development. Some features may change.
 
-- `/clawd-eyes:start` - Start backend and web UI servers
-- `/clawd-eyes:stop` - Stop all servers (kills processes on ports 4000, 4001, 5173, 9222)
-- `/clawd-eyes:status` - Check if servers are running
-- `/clawd-eyes:watch` - Watch for design requests from web UI
-- `/clawd-eyes:open` - Open web UI in browser
+Control clawd-eyes servers for visual browser inspection, element finding, and design-to-code workflows with AI agents.
 
-> **Requires:** clawd-eyes project installed locally (not yet available)
+#### Commands
 
-## Workflows
+| Command | Description |
+|---------|-------------|
+| `/clawd-eyes:start` | Start backend + web UI servers (connects to existing browser) |
+| `/clawd-eyes:stop` | Stop all clawd-eyes processes (kills ports 4000, 4001, 5173, 9222) |
+| `/clawd-eyes:status` | Check if clawd-eyes services are running |
+| `/clawd-eyes:open` | Open web UI in default browser |
+| `/clawd-eyes:watch` | Check for pending design requests from web UI |
+| `/clawd-eyes:inspect-network` | Inspect network requests using Chrome DevTools |
+| `/clawd-eyes:read-console` | Read browser console messages for debugging |
 
-### Design Workflow (Figma Make)
+#### AI Agents
 
-```
-Claude Code               Notion                  Figma Make
-    |                       |                         |
-    |-- Create spec ------->|                         |
-    |                       |                         |
-    |-- /save-context ----->| (save as Spec)          |
-    |                       |                         |
-    |-- /make ------------->| (reference spec) ------>|
-    |                       |                         |
-    |                       |<-- iterate -------------|
-    |                       |                         |
-    |                       |<-- push to GitHub ------|
-```
+**Element Finder Agent:**
+- **Name:** `element-finder`
+- **Use:** Locate page elements by natural language description
+- **Example:** "Find the login button" or "Locate the main navigation menu"
+- **Requires:** `/chrome` enabled in Claude Code
 
-1. **Create Spec** - Give Claude Code instructions for the feature/design
-2. **Save as Spec** - `/save-context` with "Spec" tag type
-3. **Create Prompt** - `/make` references the saved spec
-4. **Iterate** - Use Figma Make to implement and refine
+**Design Orchestrator Agent:**
+- **Name:** `design-orchestrator`
+- **Use:** Automatically process design requests end-to-end
+- **Workflow:**
+  1. Detects pending design requests
+  2. Fetches design context (screenshot, CSS, instruction)
+  3. Analyzes requested changes
+  4. Implements CSS/HTML modifications
+  5. Clears request when complete
 
-> **Note:** Figma Make pushes directly to GitHub. Committing happens separately in Claude Code.
+#### Workflow
 
-### Multi-Agent Workflow (Swarm)
+```bash
+# 1. Start browser with CDP enabled
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222
 
-```
-/swarm                    Background Agents         Your Session
-    |                           |                       |
-    |-- auto-detect project --->|                       |
-    |-- spawn agents ---------->|                       |
-    |                           |                       |
-    |                           |-- analyze code ------>|
-    |                           |-- write reports ----->|
-    |                           |                       |
-    |<-- /hive (check status) --|                       |
-    |<-- /sync (consolidate) ---|                       |
-```
+# 2. Start clawd-eyes
+/clawd-eyes:start
 
-1. **Start swarm** - `/swarm` auto-detects, or `/swarm review` for a preset
-2. **Work normally** - Agents analyze in background
-3. **Check progress** - `/hive` to see findings
-4. **Consolidate** - `/sync` for prioritized action list
-5. **Stop** - `/stop` when done
+# 3. Open web UI
+/clawd-eyes:open
 
-### Commit Workflow
+# 4. Navigate to pages in browser
+# 5. Click elements in web UI to inspect
+# 6. Add instructions and send to clawd-eyes
+# 7. Check for requests
+/clawd-eyes:watch
 
-```
-/commit
+# 8. Process with agents or MCP tools
 ```
 
-Run after making code changes:
-- Stage and commit changes
-- Update PR description if PR exists
-- Push with confirmation
+#### Ports Used
 
-### Context Management
+| Port | Service |
+|------|---------|
+| 9222 | Browser CDP (Chrome DevTools Protocol) |
+| 4000 | HTTP API |
+| 4001 | WebSocket |
+| 5173 | Web UI (Vite) |
 
-| Command | Purpose |
-|---------|---------|
-| `/save-context` | Save session context to local, Notion, GitHub, or docs/plans |
-| `/load-context <query>` | Search and load prior contexts from multiple sources |
-| `/context-status` | Check current context state and recent saves |
+#### Architecture
 
-### Dev Workflows
+- **Backend:** Connects to browser via CDP, captures screenshots and DOM
+- **Web UI:** React app for viewing page screenshots and selecting elements
+- **MCP Server:** Exposes `get_design_context`, `clear_design_context`, `list_elements` tools
+- **AI Agents:** Automate element finding and design implementation
 
-| Command | Purpose |
-|---------|---------|
-| `/pr-describe` | Generate/update PR description |
-| `/pr-review` | Request @claude or @codex review |
-| `/release <version>` | Create semver release (patch, minor, major, or explicit) |
-| `/kill-port` | Check and kill processes on specific ports |
+#### Requirements
 
-## Requirements
+- **clawd-eyes** repository cloned locally (not yet publicly available)
+- **Node.js** installed
+- Dependencies installed in both root and `web/` directories
+- **Browser** running with `--remote-debugging-port=9222`
+- **Optional:** Claude Code Chrome integration (`/chrome`) for enhanced features
+
+---
+
+## Complete Workflow Examples
+
+### End-to-End Design Implementation
+
+```bash
+# 1. Create and save spec
+# (Work with Claude Code to create detailed spec)
+/arevlo-context:save-context
+# → Select: Notion
+# → Tag: Spec
+# → Title: "User authentication flow"
+
+# 2. Create Figma Make prompt
+/arevlo-design:make
+# → References saved spec
+# → Creates implementation prompt
+
+# 3. (Figma Make implements the design)
+
+# 4. Review with swarm
+/arevlo-swarm:swarm review
+
+# 5. Check findings
+/arevlo-swarm:hive
+
+# 6. Fix issues
+/arevlo-swarm:fix
+
+# 7. Commit changes
+/arevlo-dev:commit
+
+# 8. Create release
+/arevlo-dev:release minor
+```
+
+### Autonomous Complex Feature
+
+```bash
+# Start autonomous workflow
+/arevlo-swarm:auto "implement OAuth authentication with Google and GitHub"
+
+# → Research phase (explores codebase)
+# → Plan phase (creates blueprint, waits for approval)
+# → Implement phase (executes with checkpoints)
+
+# If interrupted, resume
+/arevlo-swarm:auto --resume
+
+# Check context health anytime
+/arevlo-swarm:health
+
+# Final commit
+/arevlo-dev:commit
+```
+
+### Code Quality Audit
+
+```bash
+# 1. Start comprehensive analysis
+/arevlo-swarm:swarm full
+
+# 2. Monitor progress
+/arevlo-swarm:hive
+
+# 3. Consolidate findings
+/arevlo-swarm:sync
+
+# 4. Address issues interactively
+/arevlo-swarm:fix
+
+# 5. Save findings for later
+/arevlo-context:save-context
+# → Tag: Summary
+# → Title: "Q4 2024 code audit"
+
+# 6. Stop agents
+/arevlo-swarm:stop
+```
+
+### Context Management Pattern
+
+```bash
+# During work - checkpoint frequently
+/arevlo-context:checkpoint "before-database-refactor"
+
+# Mid-session - check context health
+/arevlo-swarm:health
+
+# When warned - save and compact
+/arevlo-swarm:compact
+
+# End of session - comprehensive save
+/arevlo-context:save-context
+
+# Next session - resume
+/arevlo-context:load-context "database refactor"
+```
+
+## Setup Requirements
+
+### Core Requirements
 
 - **Claude Code** with plugin support
 
-### Notion MCP Setup
+### Optional MCP Servers
 
-Add to your `~/.claude/.claude.json` under `mcpServers`:
+#### Notion MCP Server
+
+Required for: `arevlo-context` (Notion destinations), `arevlo-design`
+
+Add to `~/.claude/.claude.json` under `mcpServers`:
 
 ```json
-"notion": {
-  "type": "http",
-  "url": "https://mcp.notion.com/mcp"
+{
+  "mcpServers": {
+    "notion": {
+      "type": "http",
+      "url": "https://mcp.notion.com/mcp"
+    }
+  }
 }
 ```
 
-Then authenticate via Notion when prompted.
+Authenticate via Notion when prompted.
 
-### GitHub CLI Setup
+**Notion Database Setup:**
+
+For `arevlo-context`, create database named `_clawd` with:
+- **Name** (title) - Context title
+- **Project** (select) - Project name
+- **Tags** (multi-select) - Context, Summary, Spec, Reference
+
+For `arevlo-design`, create database named `_make` with:
+- **Name** (title) - Prompt title
+- **Type** (select) - Prompt, Changelog
+- **Project** (select) - Project name
+
+#### GitHub CLI
+
+Required for: `arevlo-dev`
 
 ```bash
-# Install
+# macOS
 brew install gh
+
+# Ubuntu/Debian
+sudo apt install gh
+
+# Windows
+winget install GitHub.cli
 
 # Authenticate
 gh auth login
 ```
 
+#### Claude Code Chrome Integration
+
+Required for: `clawd-eyes` agents
+
+```bash
+# Enable in Claude Code
+/chrome
+# → Select "Enabled by default"
+
+# Or start with flag
+claude --chrome
+```
+
+### Platform-Specific Notes
+
+#### arevlo-swarm Requirements
+
+- **macOS/Linux:** bash or zsh (default)
+- **Windows:** PowerShell (default on Windows 10+), Git Bash, or WSL
+  - Note: cmd.exe is not supported
+- **Permissions:** `--dangerously-skip-permissions` enabled
+
+#### clawd-eyes Requirements
+
+- **Browser with CDP:** Chrome/Chromium with `--remote-debugging-port=9222`
+- **clawd-eyes repo:** Cloned locally with dependencies installed
+
 ## Customization
 
-Most plugins reference specific Notion database names and data source IDs. Update these in the command files to match your own setup:
+### Database Names
 
-1. Database names (default: `_make`, `_clawd`)
-2. Data source IDs
-3. Project name mappings
+Update database names and data source IDs in command files:
 
-For swarm agents, customize behavior by editing files in `plugins/arevlo-swarm/agents/`.
+**arevlo-context:**
+- Default database: `_clawd`
+- Update in: `commands/save-context.md`
+
+**arevlo-design:**
+- Default database: `_make`
+- Update in: `commands/make.md`
+
+### Agent Behavior
+
+Customize agent focus by editing files in:
+- `plugins/arevlo-swarm/agents/reviewer.md`
+- `plugins/arevlo-swarm/agents/silent-hunter.md`
+- `plugins/arevlo-swarm/agents/type-analyzer.md`
+- etc.
+
+### Custom Swarm Presets
+
+Add custom presets to `plugins/arevlo-swarm/commands/swarm.md`:
+
+```json
+{
+  "agents": ["reviewer", "custom-agent"],
+  "watch": "src/**/*.{ts,tsx}",
+  "focus": "Your specific focus area"
+}
+```
+
+## Plugin Development
+
+See [docs/ADDING_PLUGINS.md](docs/ADDING_PLUGINS.md) for how to contribute new plugins to this marketplace.
+
+## Plugin Updates
+
+Plugins follow semantic versioning. Check the marketplace for updates:
+
+```bash
+/plugin marketplace update claude-code-workflows
+```
+
+Current versions:
+- **arevlo-context:** Latest
+- **arevlo-design:** Latest
+- **arevlo-dev:** Latest
+- **arevlo-swarm:** Latest
+- **clawd-eyes:** In Development
 
 ## Contributing
 
-See [docs/ADDING_PLUGINS.md](docs/ADDING_PLUGINS.md) for how to add new plugins.
+Contributions welcome! Please:
+1. Follow existing plugin structure
+2. Include comprehensive README in plugin directory
+3. Add examples and workflow documentation
+4. Test thoroughly before submitting PR
 
 ## License
 
