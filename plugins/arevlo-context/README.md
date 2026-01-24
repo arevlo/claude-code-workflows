@@ -18,16 +18,27 @@ Slash commands for saving and loading Claude Code session context and plans to m
 - `/checkpoint` - Quick checkpoint for mid-task saves (faster than /save-context)
 - `/plan` - Load, save, or browse Claude Code plans
 
-## Storage Destinations
+## Context Sources
 
-| Destination | Description |
-|-------------|-------------|
-| Local /tmp | Quick, ephemeral markdown files in `/tmp/claude-contexts/` |
+| Source | Description |
+|--------|-------------|
+| Session Transcripts | Prior Claude Code sessions stored in `~/.claude/projects/` (load only) |
 | Swarm checkpoints | Auto checkpoints in `.claude/swarm/progress/` (load only) |
+| Claude Plans | Plans from `~/.claude/plans/` |
 | Notion | Persistent storage in your Notion database |
 | GitHub Issue | Create an issue in the current repo for tracking |
 | Docs folder | Save to `./docs/context/` in your project |
-| Claude Plans | Plans from `~/.claude/plans/` |
+| Local /tmp | Quick, ephemeral markdown files in `/tmp/claude-contexts/` |
+
+### Session Transcripts
+
+Claude Code automatically saves every session as a `.jsonl` file with a `sessions-index.json` that tracks:
+- **Summary** - AI-generated description of what was accomplished
+- **Branch** - Git branch at time of session
+- **Message count** - Number of conversation turns
+- **Timestamps** - Created and modified dates
+
+Use `/load-context` and select "Session Transcripts" to browse prior sessions and load their content.
 
 ## Requirements
 
