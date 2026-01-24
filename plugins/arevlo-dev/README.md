@@ -15,6 +15,9 @@ Git commit workflows, PR management, and development best practices.
 - `/commit` - Full commit workflow with branch management and PR updates
 - `/pr-describe` - Generate/update PR description from all changes
 - `/pr-review` - Request AI code review via GitHub comment
+- `/kill-port` - Check and kill processes using specific ports
+- `/release` - Create a semver release with tag and GitHub release notes
+- `/resolve` - Interactively resolve git merge conflicts
 
 ## Requirements
 

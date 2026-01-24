@@ -1,7 +1,7 @@
 ---
 description: Autonomous workflow - research, plan, and implement with minimal interruption
 argument-hint: <goal>
-allowed-tools: Bash,Read,Write,Edit,Glob,Grep,Task,AskUserQuestion,TodoWrite
+allowed-tools: Bash,Read,Write,Edit,Glob,Grep,Task,AskUserQuestion,TaskCreate,TaskUpdate,TaskList
 ---
 
 Autonomous mode for complex tasks. Follows ACE (Advanced Context Engineering) principles:
@@ -346,7 +346,7 @@ If `--resume` flag is provided:
       └─────────────────────────────────────────────────────────┘
       ```
 
-   b. **Use TodoWrite** to track phase steps
+   b. **Use TaskCreate/TaskUpdate** to track phase steps
 
    c. **Execute each step:**
       - Read relevant files

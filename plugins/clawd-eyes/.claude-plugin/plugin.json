@@ -1,6 +1,0 @@
-{
-  "name": "clawd-eyes",
-  "description": "Visual browser inspector with AI-powered element finding and Chrome integration - manage servers, inspect elements, debug network and console",
-  "version": "1.7.0",
-  "agents": "./agents/"
-}

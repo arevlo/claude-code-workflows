@@ -22,8 +22,8 @@ Run these checks silently to determine which options to show:
 - **Local /tmp:** Always available
 - **Notion:** Always available (requires Notion MCP)
 - **GitHub Issue:** Check if in a git repo with remote: `git remote get-url origin`
-- **Docs folder:** Check if `docs/` directory exists using Glob
-- **Plans folder:** Check if `plans/` directory exists using Glob
+- **Docs folder:** Check if `docs/` directory exists: `test -d docs`
+- **Plans folder:** Check if `plans/` directory exists: `test -d plans`
 
 ### 3. Show destination picker
 ALWAYS ask the user where to save - present available options:

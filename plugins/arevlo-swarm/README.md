@@ -31,6 +31,7 @@ The swarm plugin enables a "hive mind" approach to code analysis and **autonomou
 ## Installation
 
 ```bash
+/plugin marketplace add arevlo/claude-code-workflows
 /plugin install arevlo-swarm@claude-code-workflows
 ```
 
@@ -47,6 +48,10 @@ The swarm plugin enables a "hive mind" approach to code analysis and **autonomou
 | `/sync` | Consolidate findings into prioritized action items |
 | `/fix` | Interactive mode to fix issues (manual or automatic) |
 | `/stop [agent]` | Stop one or all running agents |
+| `/checkpoint` | Create checkpoint using /export for full session capture |
+| `/resume` | Resume from a prior checkpoint or auto phase export |
+| `/compact` | Export full session then compact working memory |
+| `/handoff` | Prepare handoff to successor agent when approaching context limits |
 
 ## Quick Start
 
