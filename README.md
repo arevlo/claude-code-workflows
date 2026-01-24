@@ -22,7 +22,6 @@ A curated collection of Claude Code plugins providing slash commands for design-
 /plugin install arevlo-design@claude-code-workflows
 /plugin install arevlo-dev@claude-code-workflows
 /plugin install arevlo-swarm@claude-code-workflows
-/plugin install clawd-eyes@claude-code-workflows
 ```
 
 ### Updating
@@ -54,16 +53,19 @@ Save and load Claude Code session context to multiple destinations including loc
 | `/arevlo-context:checkpoint [label]` | Quick checkpoint for mid-task saves (faster than save-context) |
 | `/arevlo-context:plan` | Load, save, or browse Claude Code plans |
 
-#### Storage Destinations
+#### Context Sources
 
-| Destination | Description | Location |
-|-------------|-------------|----------|
-| **Local /tmp** | Quick, ephemeral saves | `/tmp/claude-contexts/` |
+| Source | Description | Location |
+|--------|-------------|----------|
+| **Session Transcripts** | Prior Claude Code sessions (load only) | `~/.claude/projects/` |
 | **Swarm checkpoints** | Auto checkpoints from /auto | `.claude/swarm/progress/` |
+| **Claude Plans** | Saved plans | `~/.claude/plans/` |
 | **Notion** | Persistent storage | `_clawd` database |
 | **GitHub Issue** | Issue tracking in current repo | Creates GitHub issue |
 | **Docs folder** | Project documentation | `./docs/context/` |
-| **Claude Plans** | Saved plans | `~/.claude/plans/` |
+| **Local /tmp** | Quick, ephemeral saves | `/tmp/claude-contexts/` |
+
+Session Transcripts are automatically saved by Claude Code for every session. Use `/load-context` to browse prior sessions with AI-generated summaries, branch info, and message counts.
 
 #### Workflow Example
 
@@ -386,91 +388,6 @@ Agents communicate through `.claude/swarm/`:
 
 ---
 
-### clawd-eyes
-
-**Visual browser inspector with Chrome DevTools integration.**
-
-> **⚠️ In Development:** The clawd-eyes repository is currently under development. Some features may change.
-
-Control clawd-eyes servers for visual browser inspection, element finding, and design-to-code workflows with AI agents.
-
-#### Commands
-
-| Command | Description |
-|---------|-------------|
-| `/clawd-eyes:start` | Start backend + web UI servers (connects to existing browser) |
-| `/clawd-eyes:stop` | Stop all clawd-eyes processes (kills ports 4000, 4001, 5173, 9222) |
-| `/clawd-eyes:status` | Check if clawd-eyes services are running |
-| `/clawd-eyes:open` | Open web UI in default browser |
-| `/clawd-eyes:watch` | Check for pending design requests from web UI |
-| `/clawd-eyes:inspect-network` | Inspect network requests using Chrome DevTools |
-| `/clawd-eyes:read-console` | Read browser console messages for debugging |
-
-#### AI Agents
-
-**Element Finder Agent:**
-- **Name:** `element-finder`
-- **Use:** Locate page elements by natural language description
-- **Example:** "Find the login button" or "Locate the main navigation menu"
-- **Requires:** `/chrome` enabled in Claude Code
-
-**Design Orchestrator Agent:**
-- **Name:** `design-orchestrator`
-- **Use:** Automatically process design requests end-to-end
-- **Workflow:**
-  1. Detects pending design requests
-  2. Fetches design context (screenshot, CSS, instruction)
-  3. Analyzes requested changes
-  4. Implements CSS/HTML modifications
-  5. Clears request when complete
-
-#### Workflow
-
-```bash
-# 1. Start browser with CDP enabled
-/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222
-
-# 2. Start clawd-eyes
-/clawd-eyes:start
-
-# 3. Open web UI
-/clawd-eyes:open
-
-# 4. Navigate to pages in browser
-# 5. Click elements in web UI to inspect
-# 6. Add instructions and send to clawd-eyes
-# 7. Check for requests
-/clawd-eyes:watch
-
-# 8. Process with agents or MCP tools
-```
-
-#### Ports Used
-
-| Port | Service |
-|------|---------|
-| 9222 | Browser CDP (Chrome DevTools Protocol) |
-| 4000 | HTTP API |
-| 4001 | WebSocket |
-| 5173 | Web UI (Vite) |
-
-#### Architecture
-
-- **Backend:** Connects to browser via CDP, captures screenshots and DOM
-- **Web UI:** React app for viewing page screenshots and selecting elements
-- **MCP Server:** Exposes `get_design_context`, `clear_design_context`, `list_elements` tools
-- **AI Agents:** Automate element finding and design implementation
-
-#### Requirements
-
-- **clawd-eyes** repository cloned locally (not yet publicly available)
-- **Node.js** installed
-- Dependencies installed in both root and `web/` directories
-- **Browser** running with `--remote-debugging-port=9222`
-- **Optional:** Claude Code Chrome integration (`/chrome`) for enhanced features
-
----
-
 ## Complete Workflow Examples
 
 ### End-to-End Design Implementation
@@ -626,19 +543,6 @@ winget install GitHub.cli
 gh auth login
 ```
 
-#### Claude Code Chrome Integration
-
-Required for: `clawd-eyes` agents
-
-```bash
-# Enable in Claude Code
-/chrome
-# → Select "Enabled by default"
-
-# Or start with flag
-claude --chrome
-```
-
 ### Platform-Specific Notes
 
 #### arevlo-swarm Requirements
@@ -647,11 +551,6 @@ claude --chrome
 - **Windows:** PowerShell (default on Windows 10+), Git Bash, or WSL
   - Note: cmd.exe is not supported
 - **Permissions:** `--dangerously-skip-permissions` enabled
-
-#### clawd-eyes Requirements
-
-- **Browser with CDP:** Chrome/Chromium with `--remote-debugging-port=9222`
-- **clawd-eyes repo:** Cloned locally with dependencies installed
 
 ## Customization
 
@@ -700,11 +599,10 @@ Plugins follow semantic versioning. Check the marketplace for updates:
 ```
 
 Current versions:
-- **arevlo-context:** Latest
-- **arevlo-design:** Latest
-- **arevlo-dev:** Latest
-- **arevlo-swarm:** Latest
-- **clawd-eyes:** In Development
+- **arevlo-context:** 1.8.1
+- **arevlo-design:** 1.8.1
+- **arevlo-dev:** 1.8.1
+- **arevlo-swarm:** 1.8.1
 
 ## Contributing
 
