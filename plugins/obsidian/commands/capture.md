@@ -26,14 +26,9 @@ When you share a screenshot (from Slack, Figma, browser, etc.) along with option
 
 ## Steps
 
-### 1. Analyze the Screenshot
+### 1. Gather Information First
 
-If there's an image in the conversation:
-- Analyze what it shows (UI mockup, conversation, diagram, etc.)
-- Identify key discussion points or decisions
-- Note any important context visible in the screenshot
-
-### 2. Gather Information
+**Before doing any file operations**, collect all the information needed:
 
 **Category selection:**
 - Check if user provided category in $ARGUMENTS
@@ -55,7 +50,9 @@ If there's an image in the conversation:
 - Follow-up actions needed
 - Related work or decisions
 
-### 3. Find and Copy the Screenshot
+### 2. Find and Verify the Screenshot
+
+**Only after gathering all information above**, find the screenshot in the cache:
 
 The screenshot is cached by Claude Code in `~/.claude/image-cache/`:
 
@@ -134,9 +131,14 @@ ls -lh "$VAULT_PATH/$FRAGMENT_FOLDER/_attachments/{topic}.png"
 echo "✓ Screenshot copied successfully"
 ```
 
-### 4. Create the Fragment Note
+### 3. Analyze and Create the Fragment Note
 
-Use the `mcp__obsidian-zettelkasten__create_fragment_note` tool:
+**After confirming the screenshot**, analyze what it shows:
+- Identify what the screenshot contains (UI mockup, conversation, diagram, etc.)
+- Note key discussion points or decisions visible
+- Extract important context from the image
+
+Then use the `mcp__obsidian-zettelkasten__create_fragment_note` tool:
 
 ```typescript
 {
@@ -172,7 +174,7 @@ Use the `mcp__obsidian-zettelkasten__create_fragment_note` tool:
 }
 ```
 
-### 5. Provide Summary
+### 4. Provide Summary
 
 Show the user:
 - Path to the created fragment note
