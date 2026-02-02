@@ -63,6 +63,26 @@ The screenshot is cached by Claude Code in `~/.claude/image-cache/`:
 # Find the most recent image
 LATEST_IMAGE=$(ls -t ~/.claude/image-cache/*/[0-9]*.png 2>/dev/null | head -1)
 
+# Validate image exists
+if [ -z "$LATEST_IMAGE" ]; then
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo "  No Screenshot Detected"
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo ""
+  echo "To use /arevlo:obsidian:capture, you need to:"
+  echo ""
+  echo "  1. Paste or attach a screenshot in the chat"
+  echo "  2. Then run /arevlo:obsidian:capture again"
+  echo ""
+  echo "The screenshot will be automatically cached and"
+  echo "ready for capture when you re-run the command."
+  echo ""
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  exit 1
+fi
+
+echo "✓ Screenshot detected: $(basename "$LATEST_IMAGE")"
+
 # Set vault path and fragment folder
 VAULT_PATH="/Users/arevlo/Library/Mobile Documents/com~apple~CloudDocs/zk"
 FRAGMENT_FOLDER="{category}/fragments"
@@ -73,8 +93,17 @@ mkdir -p "$VAULT_PATH/$FRAGMENT_FOLDER/_attachments"
 # Copy the image with the topic name
 cp "$LATEST_IMAGE" "$VAULT_PATH/$FRAGMENT_FOLDER/_attachments/{topic}.png"
 
-# Verify the copy
+# Verify the copy succeeded
+if [ ! -f "$VAULT_PATH/$FRAGMENT_FOLDER/_attachments/{topic}.png" ]; then
+  echo "Error: Failed to copy screenshot to Obsidian vault."
+  echo "Source: $LATEST_IMAGE"
+  echo "Destination: $VAULT_PATH/$FRAGMENT_FOLDER/_attachments/{topic}.png"
+  exit 1
+fi
+
+# Show confirmation
 ls -lh "$VAULT_PATH/$FRAGMENT_FOLDER/_attachments/{topic}.png"
+echo "✓ Screenshot copied successfully"
 ```
 
 ### 4. Create the Fragment Note
