@@ -81,8 +81,36 @@ if [ -z "$LATEST_IMAGE" ]; then
   exit 1
 fi
 
-echo "✓ Screenshot detected: $(basename "$LATEST_IMAGE")"
+# Show which image was found
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "  Screenshot Found in Cache"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "Most recent image: $(basename "$LATEST_IMAGE")"
+ls -lh "$LATEST_IMAGE"
+echo ""
+echo "I'll show you this image for confirmation..."
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+```
 
+**After running the bash block above:**
+
+1. Use the `Read` tool to display the image to the user:
+   - Read the file at the path stored in `$LATEST_IMAGE`
+   - This will show the screenshot visually in the conversation
+
+2. Use `AskUserQuestion` to confirm:
+   - Question: "Is this the correct screenshot you want to capture?"
+   - Options:
+     - "Yes, use this screenshot"
+     - "No, wrong screenshot"
+   - If "No": Exit with message instructing user to paste the correct screenshot
+
+3. Only proceed with copy if user confirms "Yes"
+
+Then continue with the copy operation:
+
+```bash
 # Set vault path and fragment folder
 VAULT_PATH="/Users/arevlo/Library/Mobile Documents/com~apple~CloudDocs/zk"
 FRAGMENT_FOLDER="{category}/fragments"
