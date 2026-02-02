@@ -1,6 +1,5 @@
 ---
 description: Capture screenshots with context and create fragment notes in Obsidian vault
-argument-hint: [optional: folder name]
 allowed-tools: mcp__obsidian-zettelkasten__create_fragment_note,Bash,AskUserQuestion,Read
 ---
 
@@ -31,8 +30,7 @@ When you share a screenshot (from Slack, Figma, browser, etc.) along with option
 **Before doing any file operations**, collect all the information needed:
 
 **Category selection:**
-- Check if user provided category in $ARGUMENTS
-- If not, ask: "Which category should I save this to?"
+- Ask: "Which category should I save this to?"
 - Common options: `flow`, `ai`, `personal`, `work`
 - Default to `flow` if user doesn't specify
 - Fragment will be saved in `{category}/fragments/` subfolder
