@@ -20,6 +20,10 @@
       "source": "./plugins/arevlo-dev"
     },
     {
+      "name": "obsidian",
+      "source": "./plugins/obsidian"
+    },
+    {
       "name": "arevlo-swarm",
       "source": "./plugins/arevlo-swarm"
     }

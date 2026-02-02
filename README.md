@@ -21,6 +21,7 @@ A curated collection of Claude Code plugins providing slash commands for design-
 /plugin install arevlo-context@claude-code-workflows
 /plugin install arevlo-design@claude-code-workflows
 /plugin install arevlo-dev@claude-code-workflows
+/plugin install obsidian@claude-code-workflows
 /plugin install arevlo-swarm@claude-code-workflows
 ```
 
@@ -226,6 +227,61 @@ type: brief description (50 chars max)
 
 - **GitHub CLI** (`gh`) installed and authenticated
 - Git repository with remote configured
+
+---
+
+### obsidian
+
+**Capture screenshots and context to Obsidian Zettelkasten vault as fragment notes.**
+
+Quickly save screenshots with analysis and context to your Obsidian vault, supporting the Zettelkasten method of knowledge management.
+
+#### Commands
+
+| Command | Description |
+|---------|-------------|
+| `/obsidian:capture [folder]` | Capture screenshot with context and create fragment note |
+
+#### Workflow
+
+```bash
+# Share a screenshot in chat (Slack, Figma, browser, etc.)
+[Paste screenshot]
+https://life-in-flow.slack.com/archives/...
+
+# Capture it
+/obsidian:capture flow
+
+# What it does:
+# 1. Analyzes the screenshot content
+# 2. Asks for topic/title (e.g., "property-filters-ui")
+# 3. Copies screenshot to {vault}/{folder}/_attachments/{topic}.png
+# 4. Creates fragment note with embedded image and analysis
+# 5. Includes external links (Slack, Figma, etc.)
+# 6. Returns note path
+```
+
+#### Fragment Lifecycle
+
+Fragments are temporary captures in the Zettelkasten method:
+1. **Capture** - Quickly save ideas/screenshots (this plugin)
+2. **Process** - Review and convert to atomic primitives
+3. **Connect** - Link primitives to build knowledge graph
+
+Use `mcp__obsidian-zettelkasten__process_fragment` to convert fragments to primitives later.
+
+#### Use Cases
+
+- **Design discussions** - Capture Figma screenshots with Slack context
+- **Code reviews** - Save code snippets with PR comments
+- **Meeting notes** - Capture whiteboard photos with decisions
+- **Bug reports** - Screenshot error states with context
+
+#### Requirements
+
+- **Obsidian MCP server** configured and running
+- **Obsidian vault** accessible at configured path
+- Screenshots pasted in Claude Code (auto-cached)
 
 ---
 
