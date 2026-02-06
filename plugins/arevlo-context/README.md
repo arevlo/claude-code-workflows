@@ -6,7 +6,7 @@ Slash commands for saving and loading Claude Code session context and plans to m
 
 ```
 /plugin marketplace add arevlo/claude-code-workflows
-/plugin install arevlo-context@claude-code-workflows
+/plugin install arevlo:context@claude-code-workflows
 ```
 
 ## What's Included

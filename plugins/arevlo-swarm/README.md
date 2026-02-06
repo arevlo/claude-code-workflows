@@ -1,4 +1,4 @@
-# arevlo-swarm
+# arevlo:swarm
 
 Multi-agent orchestration with ACE context management for Claude Code.
 
@@ -32,7 +32,7 @@ The swarm plugin enables a "hive mind" approach to code analysis and **autonomou
 
 ```bash
 /plugin marketplace add arevlo/claude-code-workflows
-/plugin install arevlo-swarm@claude-code-workflows
+/plugin install arevlo:swarm@claude-code-workflows
 ```
 
 ## Commands
