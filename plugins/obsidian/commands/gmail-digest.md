@@ -1,16 +1,38 @@
 ---
 description: Analyze unread Gmail emails and create a bucketed digest in Obsidian vault
-allowed-tools: mcp__claude-in-chrome__tabs_context_mcp,mcp__claude-in-chrome__tabs_create_mcp,mcp__claude-in-chrome__navigate,mcp__claude-in-chrome__read_page,mcp__claude-in-chrome__javascript_tool,mcp__claude-in-chrome__computer,Write,Bash,AskUserQuestion
+allowed-tools: mcp__claude-in-chrome__tabs_context_mcp,mcp__claude-in-chrome__tabs_create_mcp,mcp__claude-in-chrome__navigate,mcp__claude-in-chrome__read_page,mcp__claude-in-chrome__javascript_tool,mcp__claude-in-chrome__computer,Write,Bash,AskUserQuestion,Read
 ---
 
 Open Gmail in Chrome, read all unread emails, categorize them into bucketed summaries, save as a dated markdown file in the Obsidian vault, and mark emails as read.
 
 ## Configuration
 
-**Obsidian vault path:** `~/Desktop/flyt/`
+Configuration is stored in `~/.claude/obsidian-plugin.json`. The `digest_output_path` field is used for the output directory.
+
 **Output filename:** `gmail-digest-YYYY-MM-DD.md` (appends counter if file exists: `gmail-digest-2026-02-07-2.md`)
 
 ## Steps
+
+### 0. Load Configuration
+
+Before doing anything else, read the configuration file:
+
+1. Use the `Read` tool to read `~/.claude/obsidian-plugin.json`
+2. **If the file does not exist:**
+   - Inform the user: "No Obsidian plugin configuration found. Let's set it up."
+   - Use `AskUserQuestion` to ask for their Obsidian vault path (absolute path, no `~`)
+   - Use `AskUserQuestion` to ask for their digest output directory (absolute path, no `~`)
+   - Use `Bash` to create the config file:
+     ```bash
+     mkdir -p ~/.claude && cat > ~/.claude/obsidian-plugin.json << 'ENDCONFIG'
+     {
+       "vault_path": "{user's vault path}",
+       "digest_output_path": "{user's digest path}"
+     }
+     ENDCONFIG
+     ```
+   - Continue with the values provided
+3. **If the file exists:** Parse the JSON and extract `digest_output_path` for use in subsequent steps
 
 ### 1. Open Gmail Unread View
 
@@ -133,7 +155,8 @@ Determine the filename:
 
 ```bash
 DATE=$(date +%Y-%m-%d)
-BASE="$HOME/Desktop/flyt/gmail-digest-${DATE}"
+OUTPUT_DIR="{digest_output_path from config}"
+BASE="${OUTPUT_DIR}/gmail-digest-${DATE}"
 FILE="${BASE}.md"
 
 # If file already exists, append a counter
@@ -165,7 +188,7 @@ Gmail Digest Complete
     - FYI / Informational: {n}
     - Automated / System: {n}
 
-  Saved to: ~/Desktop/flyt/gmail-digest-YYYY-MM-DD.md
+  Saved to: {digest_output_path}/gmail-digest-YYYY-MM-DD.md
   All emails marked as read.
 ```
 

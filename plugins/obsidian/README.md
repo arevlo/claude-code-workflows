@@ -111,24 +111,35 @@ Open Gmail in Chrome, read all unread emails, categorize them, and save a bucket
    - **FYI / Informational** — newsletters, notifications, updates
    - **Automated / System** — receipts, alerts, service notifications
 4. Generates a structured markdown digest
-5. Saves to `~/Desktop/flyt/gmail-digest-YYYY-MM-DD.md`
+5. Saves to `{digest_output_path}/gmail-digest-YYYY-MM-DD.md`
 6. Shows summary of processed emails and categories
 
-**Example output file:** `~/Desktop/flyt/gmail-digest-2026-02-07.md`
+**Example output file:** `gmail-digest-2026-02-07.md` (saved to your configured `digest_output_path`)
 
 **Notes:**
 - Running multiple times per day appends a counter (e.g., `gmail-digest-2026-02-07-2.md`)
 - Requires Chrome with the Claude in Chrome extension
 - Emails are marked as read by being opened during processing
 
+### `/arevlo:obsidian:configure`
+
+Set up or update the Obsidian plugin configuration (vault path, digest output path).
+
+**Usage:**
+```
+/arevlo:obsidian:configure
+```
+
 ## Configuration
 
-The plugin expects your Obsidian vault at:
-```
-/Users/arevlo/Library/Mobile Documents/com~apple~CloudDocs/zk
-```
+On first use, any command will prompt you to configure your paths. Configuration is stored in `~/.claude/obsidian-plugin.json`:
 
-To change this, edit the `VAULT_PATH` in `commands/capture.md`.
+| Field | Used By | Description |
+|-------|---------|-------------|
+| `vault_path` | `/capture`, `/save-link` | Absolute path to your Obsidian vault |
+| `digest_output_path` | `/gmail-digest` | Absolute path for Gmail digest files |
+
+To reconfigure, run `/arevlo:obsidian:configure` or edit `~/.claude/obsidian-plugin.json` directly.
 
 ## Installation
 
@@ -176,6 +187,7 @@ Use `mcp__obsidian-zettelkasten__process_fragment` to convert fragments to primi
 
 ## Version History
 
+- **1.4.0** - Made paths configurable via `~/.claude/obsidian-plugin.json`; added `/arevlo:obsidian:configure` command
 - **1.3.0** - Added `/arevlo:obsidian:gmail-digest` command for Gmail digest summaries
 - **1.2.0** - Added `/arevlo:obsidian:save-link` command for saving external links to notes
 - **1.0.0** - Initial release with screenshot capture to fragment notes
