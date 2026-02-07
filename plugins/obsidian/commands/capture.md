@@ -21,9 +21,30 @@ When you share a screenshot (from Slack, Figma, browser, etc.) along with option
 
 ## Configuration
 
-**Obsidian vault path:** `/Users/arevlo/Library/Mobile Documents/com~apple~CloudDocs/zk`
+Configuration is stored in `~/.claude/obsidian-plugin.json`. The `vault_path` field is used for fragment captures.
 
 ## Steps
+
+### 0. Load Configuration
+
+Before doing anything else, read the configuration file:
+
+1. Use the `Read` tool to read `~/.claude/obsidian-plugin.json`
+2. **If the file does not exist:**
+   - Inform the user: "No Obsidian plugin configuration found. Let's set it up."
+   - Use `AskUserQuestion` to ask for their Obsidian vault path (absolute path, no `~`)
+   - Use `AskUserQuestion` to ask for their digest output directory (absolute path, no `~`)
+   - Use `Bash` to create the config file:
+     ```bash
+     mkdir -p ~/.claude && cat > ~/.claude/obsidian-plugin.json << 'ENDCONFIG'
+     {
+       "vault_path": "{user's vault path}",
+       "digest_output_path": "{user's digest path}"
+     }
+     ENDCONFIG
+     ```
+   - Continue with the values provided
+3. **If the file exists:** Parse the JSON and extract `vault_path` for use in subsequent steps
 
 ### 1. Gather Information First
 
@@ -106,8 +127,8 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 Then continue with the copy operation:
 
 ```bash
-# Set vault path and fragment folder
-VAULT_PATH="/Users/arevlo/Library/Mobile Documents/com~apple~CloudDocs/zk"
+# Set vault path from config (loaded in Step 0) and fragment folder
+VAULT_PATH="{vault_path from config}"
 FRAGMENT_FOLDER="{category}/fragments"
 
 # Create _attachments folder if needed
