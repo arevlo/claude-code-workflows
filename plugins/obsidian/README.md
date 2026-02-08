@@ -1,6 +1,6 @@
-# Obsidian Capture Plugin
+# Obsidian Plugin
 
-Capture screenshots and context directly to your Obsidian Zettelkasten vault as fragment notes.
+Capture screenshots and context to your Obsidian Zettelkasten vault as fragment notes. Save external links to note tables. Interactively study complex documents with Q&A. Add Confluence document summaries to project files.
 
 ## Commands
 
@@ -13,31 +13,17 @@ Capture a screenshot with context and create a fragment note in your Obsidian va
 /arevlo:obsidian:capture [category]
 
 # Example:
-/arevlo:obsidian:capture flow
+/arevlo:obsidian:capture ai
 ```
 
 **What it does:**
 1. Analyzes any screenshot you've shared in the conversation
-2. Prompts for category (flow, ai, personal, etc.) if not provided
+2. Prompts for category if not provided
 3. Asks for a topic-based title
 4. Creates a `{category}/fragments/` subfolder if it doesn't exist
 5. Copies the screenshot to `{category}/fragments/_attachments/{topic}.png`
 6. Creates a fragment note with the screenshot embedded, your analysis, and any external links
 7. Returns the path to the created note
-
-**Example workflow:**
-```
-User: [Pastes screenshot from Slack]
-      https://life-in-flow.slack.com/archives/C123/p456
-
-/arevlo:obsidian:capture flow
-
-Claude: What topic should I use for the filename?
-User: property-filters-discussion
-
-Claude: ✓ Fragment note created: flow/fragments/property-filters-discussion.md
-        ✓ Screenshot saved: flow/fragments/_attachments/property-filters-discussion.png
-```
 
 ### `/arevlo:obsidian:save-link`
 
@@ -61,58 +47,62 @@ Save external links to an Obsidian note's external links table. Creates the note
 6. Creates the note if it doesn't exist
 7. Auto-generates a source tag from the URL domain (e.g., "source/anthropic")
 
-**Example workflow:**
+### `/arevlo:obsidian:study`
+
+Interactively break down and study complex documents (TDDs, specs, architecture docs) with Q&A, saving session notes to your Obsidian vault.
+
+**Usage:**
 ```
-User: /arevlo:obsidian:save-link https://anthropic.com/research/constitutional-ai
-
-Claude: What title/description should I use for this link?
-User: Constitutional AI Research Paper
-
-Claude: Where should I save this link?
-User: ai/outlinks
-
-Claude: Any tags to add? (optional)
-User: research, alignment
-
-Claude: Any notes or context? (optional)
-User: Foundational paper on RLHF with AI feedback
-
-Claude: ✓ Link saved to ai/outlinks
-        Title: Constitutional AI Research Paper
-        Tags: research, alignment, source/anthropic
+/arevlo:obsidian:study [confluence-url or file-path]
 ```
 
-**External Links Table Format:**
-The command creates/updates a table in your note with this structure:
-```markdown
-## External Links
+**What it does:**
+1. Fetches the document content (Confluence or local file)
+2. Parses it into logical sections and presents an outline
+3. Walks through each section interactively with summaries and Q&A
+4. Tracks all questions and answers from the session
+5. Generates a study session note with summaries, key points, Q&A, and takeaways
+6. Saves the note to your Obsidian vault
 
-| Title | Tags | Link | Notes |
-|-------|------|------|-------|
-| Constitutional AI Research Paper | #research #alignment #source/anthropic | [Constitutional AI Research Paper](https://anthropic.com/research/constitutional-ai) | Foundational paper on RLHF with AI feedback |
+### `/arevlo:obsidian:project-doc`
+
+Add a Confluence document summary (TDD, PRD, Design Doc, RFC, Spec) to a project file.
+
+**Usage:**
 ```
+/arevlo:obsidian:project-doc [confluence-url] [optional:project-name]
+```
+
+**What it does:**
+1. Fetches the Confluence page content and metadata
+2. Auto-detects the document type (TDD, PRD, Design, RFC, Spec) from the title
+3. Asks which platform section (Web/Mobile) and document status
+4. Generates a one-line description, author attribution, and dense 3-6 sentence summary
+5. Creates a new project file with the full template, or appends the section to an existing one
 
 ## Configuration
 
-The plugin expects your Obsidian vault at:
-```
-/Users/arevlo/Library/Mobile Documents/com~apple~CloudDocs/zk
-```
+Configuration is stored in `~/.claude/obsidian-plugin.json`. On first use, any command will prompt you to set up your vault path.
 
-To change this, edit the `VAULT_PATH` in `commands/capture.md`.
+| Field | Used By | Description |
+|-------|---------|-------------|
+| `vault_path` | All commands | Absolute path to your Obsidian vault |
+
+To reconfigure, edit `~/.claude/obsidian-plugin.json` directly.
 
 ## Installation
 
 This plugin is part of the `claude-code-workflows` marketplace.
 
-1. Make sure your `~/.claude.json` includes this marketplace:
+1. Add the marketplace to `~/.claude.json`:
 ```json
 {
   "extraKnownMarketplaces": {
     "claude-code-workflows": {
       "source": {
-        "source": "directory",
-        "path": "/Users/arevlo/Desktop/personal-repos/claude-code-workflows"
+        "source": "github",
+        "owner": "arevlo",
+        "repo": "claude-code-workflows"
       }
     }
   }
@@ -132,9 +122,9 @@ This plugin is part of the `claude-code-workflows` marketplace.
 
 ## Requirements
 
-- **Obsidian MCP server** must be configured and running
 - Screenshots must be pasted into Claude Code (they're auto-cached in `~/.claude/image-cache/`)
 - Your Obsidian vault must be accessible at the configured path
+- For `/study` and `/project-doc`: Atlassian MCP server for Confluence access
 
 ## Fragment Workflow
 
@@ -143,9 +133,8 @@ Fragments are temporary captures in the Zettelkasten method:
 2. **Process** - Review and convert to atomic primitives
 3. **Connect** - Link primitives to build knowledge graph
 
-Use `mcp__obsidian-zettelkasten__process_fragment` to convert fragments to primitives later.
-
 ## Version History
 
+- **1.6.0** - Added `/arevlo:obsidian:study` and `/arevlo:obsidian:project-doc` commands
 - **1.2.0** - Added `/arevlo:obsidian:save-link` command for saving external links to notes
 - **1.0.0** - Initial release with screenshot capture to fragment notes
