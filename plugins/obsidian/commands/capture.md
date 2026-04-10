@@ -21,7 +21,7 @@ When you share a screenshot (from Slack, Figma, browser, etc.) along with option
 
 ## Configuration
 
-**Obsidian vault path:** `/Users/arevlo/Library/Mobile Documents/com~apple~CloudDocs/zk`
+**Obsidian vault path:** `~/Library/Mobile Documents/com~apple~CloudDocs/zk`
 
 ## Steps
 
@@ -64,10 +64,10 @@ if [ -z "$LATEST_IMAGE" ]; then
   echo "  No Screenshot Detected"
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   echo ""
-  echo "To use /arevlo:obsidian:capture, you need to:"
+  echo "To use /obsidian:capture, you need to:"
   echo ""
   echo "  1. Paste or attach a screenshot in the chat"
-  echo "  2. Then run /arevlo:obsidian:capture again"
+  echo "  2. Then run /obsidian:capture again"
   echo ""
   echo "The screenshot will be automatically cached and"
   echo "ready for capture when you re-run the command."
@@ -107,7 +107,7 @@ Then continue with the copy operation:
 
 ```bash
 # Set vault path and fragment folder
-VAULT_PATH="/Users/arevlo/Library/Mobile Documents/com~apple~CloudDocs/zk"
+VAULT_PATH="~/Library/Mobile Documents/com~apple~CloudDocs/zk"
 FRAGMENT_FOLDER="{category}/fragments"
 
 # Create _attachments folder if needed

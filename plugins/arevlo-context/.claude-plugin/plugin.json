@@ -1,5 +1,0 @@
-{
-  "name": "arevlo:context",
-  "description": "Save/load session context with /context-status monitoring - supports swarm checkpoints, /tmp quick saves, and multiple destinations",
-  "version": "1.8.1"
-}

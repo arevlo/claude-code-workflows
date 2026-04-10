@@ -8,24 +8,40 @@
   "repository": "https://github.com/arevlo/claude-code-workflows",
   "plugins": [
     {
-      "name": "arevlo-design",
-      "source": "./plugins/arevlo-design"
+      "name": "design",
+      "source": "./plugins/design"
     },
     {
-      "name": "arevlo-context",
-      "source": "./plugins/arevlo-context"
+      "name": "context",
+      "source": "./plugins/context"
     },
     {
-      "name": "arevlo-dev",
-      "source": "./plugins/arevlo-dev"
+      "name": "dev",
+      "source": "./plugins/dev"
     },
     {
       "name": "obsidian",
       "source": "./plugins/obsidian"
     },
     {
-      "name": "arevlo-swarm",
-      "source": "./plugins/arevlo-swarm"
+      "name": "swarm",
+      "source": "./plugins/swarm"
+    },
+    {
+      "name": "pi",
+      "source": "./plugins/pi"
+    },
+    {
+      "name": "guides",
+      "source": "./plugins/guides"
+    },
+    {
+      "name": "specs",
+      "source": "./plugins/specs"
+    },
+{
+      "name": "utils",
+      "source": "./plugins/utils"
     }
   ]
 }

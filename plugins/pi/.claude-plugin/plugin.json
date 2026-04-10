@@ -1,0 +1,5 @@
+{
+  "name": "pi",
+  "version": "1.0.0",
+  "description": "Raspberry Pi remote desktop control via SSH — mouse clicks, keyboard input, screenshots, and multi-step UI automation on Wayland/labwc"
+}

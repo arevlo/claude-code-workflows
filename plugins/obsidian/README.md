@@ -1,19 +1,19 @@
-# Obsidian Capture Plugin
+# Obsidian Plugin
 
-Capture screenshots and context directly to your Obsidian Zettelkasten vault as fragment notes.
+Capture screenshots, manage notes, run digests, and maintain your Obsidian Zettelkasten vault from Claude Code.
 
 ## Commands
 
-### `/arevlo:obsidian:capture`
+### `/obsidian:capture`
 
 Capture a screenshot with context and create a fragment note in your Obsidian vault.
 
 **Usage:**
 ```
-/arevlo:obsidian:capture [category]
+/obsidian:capture [category]
 
 # Example:
-/arevlo:obsidian:capture flow
+/obsidian:capture flow
 ```
 
 **What it does:**
@@ -28,9 +28,9 @@ Capture a screenshot with context and create a fragment note in your Obsidian va
 **Example workflow:**
 ```
 User: [Pastes screenshot from Slack]
-      https://life-in-flow.slack.com/archives/C123/p456
+      https://your-workspace.slack.com/archives/C123/p456
 
-/arevlo:obsidian:capture flow
+/obsidian:capture flow
 
 Claude: What topic should I use for the filename?
 User: property-filters-discussion
@@ -39,17 +39,17 @@ Claude: ✓ Fragment note created: flow/fragments/property-filters-discussion.md
         ✓ Screenshot saved: flow/fragments/_attachments/property-filters-discussion.png
 ```
 
-### `/arevlo:obsidian:save-link`
+### `/obsidian:save-link`
 
 Save external links to an Obsidian note's external links table. Creates the note if it doesn't exist.
 
 **Usage:**
 ```
-/arevlo:obsidian:save-link <url> [note-path]
+/obsidian:save-link <url> [note-path]
 
 # Examples:
-/arevlo:obsidian:save-link https://anthropic.com
-/arevlo:obsidian:save-link https://example.com/article ai/outlinks
+/obsidian:save-link https://anthropic.com
+/obsidian:save-link https://example.com/article ai/outlinks
 ```
 
 **What it does:**
@@ -63,7 +63,7 @@ Save external links to an Obsidian note's external links table. Creates the note
 
 **Example workflow:**
 ```
-User: /arevlo:obsidian:save-link https://anthropic.com/research/constitutional-ai
+User: /obsidian:save-link https://anthropic.com/research/constitutional-ai
 
 Claude: What title/description should I use for this link?
 User: Constitutional AI Research Paper
@@ -92,11 +92,47 @@ The command creates/updates a table in your note with this structure:
 | Constitutional AI Research Paper | #research #alignment #source/anthropic | [Constitutional AI Research Paper](https://anthropic.com/research/constitutional-ai) | Foundational paper on RLHF with AI feedback |
 ```
 
+### `/obsidian:configure`
+
+Set up or update the Obsidian plugin configuration (`~/.claude/obsidian-plugin.json`), including vault path and digest output directory. Auto-detects the vault path when possible.
+
+### `/obsidian:gmail:digest`
+
+Fetch all unread Gmail emails via the Gmail MCP, categorize them into bucketed summaries (Action Required, Calendar, Conversations, FYI, Automated, Figma Comments), and save a dated digest markdown file to your Obsidian vault.
+
+### `/obsidian:graph:sync`
+
+Scan all vault `.md` files for keyword matches and insert `[[wiki-links]]` inline. Runs a semantic pass on unlinked files to append `## Related` sections. Increases Obsidian graph density.
+
+### `/obsidian:health`
+
+Display a health dashboard for your vault: orphan count, dead ends, broken links, open tasks, tag totals, and a computed health score (0-100). Offers drill-down into each metric.
+
+### `/obsidian:note:create`
+
+Create a new note in any registered Obsidian vault. Detects all vaults on the current machine, lets you choose vault and subfolder, and writes a properly formatted markdown note with frontmatter.
+
+### `/obsidian:search`
+
+Search the vault for notes matching a query using the Obsidian CLI. Supports folder filtering, case-sensitive search, and result limits. Displays results with surrounding context.
+
+### `/obsidian:slack:digest`
+
+Read Slack mentions, DMs, and key channels via the Slack MCP, categorize messages (Action Required, Mentions, DMs, Active Threads, Channel Highlights, Bot/Automated), and save a dated digest to the vault.
+
+### `/obsidian:task:create`
+
+Create a task markdown file with TaskBase-compatible frontmatter. Supports screenshot analysis for auto-filling task details, link enrichment (GitHub comments, Slack threads), and structured prompts for project, priority, status, and due date.
+
+### `/obsidian:weekly`
+
+Generate a weekly review from daily notes, tasks, and tags. Synthesizes accomplishments, in-progress work, blockers, and next-week priorities into a structured review document saved to `reviews/weekly/`.
+
 ## Configuration
 
 The plugin expects your Obsidian vault at:
 ```
-/Users/arevlo/Library/Mobile Documents/com~apple~CloudDocs/zk
+~/Library/Mobile Documents/com~apple~CloudDocs/zk
 ```
 
 To change this, edit the `VAULT_PATH` in `commands/capture.md`.
@@ -112,7 +148,7 @@ This plugin is part of the `claude-code-workflows` marketplace.
     "claude-code-workflows": {
       "source": {
         "source": "directory",
-        "path": "/Users/arevlo/Desktop/personal-repos/claude-code-workflows"
+        "path": "/path/to/claude-code-workflows"
       }
     }
   }
@@ -123,7 +159,7 @@ This plugin is part of the `claude-code-workflows` marketplace.
 ```json
 {
   "enabledPlugins": {
-    "arevlo:obsidian@claude-code-workflows": true
+    "obsidian@claude-code-workflows": true
   }
 }
 ```
@@ -147,5 +183,6 @@ Use `mcp__obsidian-zettelkasten__process_fragment` to convert fragments to primi
 
 ## Version History
 
-- **1.2.0** - Added `/arevlo:obsidian:save-link` command for saving external links to notes
+- **1.3.0** - Added 9 commands: configure, gmail-digest, graph-sync, health, note-create, search, slack-digest, task-create, weekly
+- **1.2.0** - Added `/obsidian:save-link` command for saving external links to notes
 - **1.0.0** - Initial release with screenshot capture to fragment notes
