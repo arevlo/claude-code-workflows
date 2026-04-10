@@ -6,7 +6,7 @@ Git workflows, branch management, PR lifecycle, worktree operations, and develop
 
 ```
 /plugin marketplace add arevlo/claude-code-workflows
-/plugin install dev-workflows@claude-code-workflows
+/plugin install dev@claude-code-workflows
 ```
 
 ## What's Included

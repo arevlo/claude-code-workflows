@@ -5,7 +5,8 @@ Raspberry Pi remote desktop control for Wayland/labwc via SSH. Lets Claude Code 
 ## Installation
 
 ```
-/install-plugin pi@claude-code-workflows
+/plugin marketplace add arevlo/claude-code-workflows
+/plugin install pi@claude-code-workflows
 ```
 
 ## Commands

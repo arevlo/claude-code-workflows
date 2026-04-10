@@ -6,7 +6,7 @@ Slash commands for Figma workflows - Make prompts, FigJam diagrams, and MCP setu
 
 ```
 /plugin marketplace add arevlo/claude-code-workflows
-/plugin install figma-make-toolkit@claude-code-workflows
+/plugin install design@claude-code-workflows
 ```
 
 ## What's Included
