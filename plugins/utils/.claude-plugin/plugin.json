@@ -1,0 +1,5 @@
+{
+  "name": "utils",
+  "version": "1.0.0",
+  "description": "Standalone utilities — Dropbox browsing, macOS sleep toggle, MCP server management, Apple Notes, portless setup, YouTube transcription, interview feedback, and more"
+}

@@ -1,0 +1,153 @@
+# Context Management
+
+Slash commands for saving and loading Claude Code session context and plans to multiple destinations.
+
+## Installation
+
+```
+/plugin marketplace add arevlo/claude-code-workflows
+/plugin install context@claude-code-workflows
+```
+
+## What's Included
+
+### Commands
+- `/save-context` - Save current session to multiple destinations
+- `/load-context` - Search and load prior context from multiple sources
+- `/context-status` - Check current context state and recent saves
+- `/checkpoint` - Quick checkpoint for mid-task saves (faster than /save-context)
+- `/plan` - Load, save, or browse Claude Code plans
+- `/progress-save` - Save full session progress with resume prompt (before /clear)
+
+## Context Sources
+
+| Source | Description |
+|--------|-------------|
+| Session Transcripts | Prior Claude Code sessions stored in `~/.claude/projects/` (load only) |
+| Swarm checkpoints | Auto checkpoints in `.claude/swarm/progress/` (load only) |
+| Claude Plans | Plans from `~/.claude/plans/` |
+| Notion | Persistent storage in your Notion database |
+| GitHub Issue | Create an issue in the current repo for tracking |
+| Docs folder | Save to `./docs/context/` in your project |
+| Local /tmp | Quick, ephemeral markdown files in `/tmp/claude-contexts/` |
+
+### Session Transcripts
+
+Claude Code automatically saves every session as a `.jsonl` file with a `sessions-index.json` that tracks:
+- **Summary** - AI-generated description of what was accomplished
+- **Branch** - Git branch at time of session
+- **Message count** - Number of conversation turns
+- **Timestamps** - Created and modified dates
+
+Use `/load-context` and select "Session Transcripts" to browse prior sessions and load their content.
+
+## Requirements
+
+### Notion (optional)
+- **Notion MCP server** configured in Claude Code
+- **Notion database** for storing contexts (default name: `_context`)
+
+Your Notion database should have these properties:
+- **Name** (title) - Session/context title
+- **Project** (select) - Project name
+- **Tags** (multi-select) - Context, Summary, Spec, Reference
+
+### GitHub CLI (optional)
+
+If you want to save context to GitHub Issues, install the GitHub CLI:
+
+**macOS:**
+```bash
+brew install gh
+```
+
+**Ubuntu/Debian:**
+```bash
+sudo apt install gh
+```
+
+**Windows:**
+```bash
+winget install GitHub.cli
+```
+
+After installing, authenticate:
+```bash
+gh auth login
+```
+
+## Usage
+
+### End of Session
+```
+/save-context
+```
+- Detects project from working directory
+- Asks where to save (local, Notion, GitHub, docs)
+- Asks for tag type and title
+- Generates comprehensive session summary
+- Saves to selected destination
+
+### Start of Session
+```
+/load-context [search query]
+```
+- Asks which source to search
+- Searches your selected source
+- Shows matching results
+- Lets you select and view full content
+
+### Check Context Status
+```
+/context-status
+```
+- Shows recent saves in `/tmp/claude-contexts/`
+- Shows swarm progress checkpoints
+- Shows active `/auto` sessions
+- Shows recent swarm reports
+
+### Quick Checkpoint (Mid-Task)
+```
+/checkpoint
+/checkpoint "before-refactor"
+```
+- Fast checkpoint without interactive prompts
+- Designed for mid-task use when you want a quick save point
+- Saves to `.claude/swarm/progress/checkpoint-{timestamp}-{label}.md`
+- Use before risky changes or when context feels heavy
+
+### Save Progress (Before /clear)
+```
+/progress-save
+```
+- Comprehensive progress snapshot with completed work, in-progress state, remaining steps, and technical handles
+- Generates a clipboard-ready resume prompt to paste after `/clear`
+- Captures key state: node IDs, variable IDs, positions, helper snippets
+- Use before `/clear` on long multi-step sessions
+
+### Continue a Plan
+```
+/plan
+```
+- Shows recent plans from `~/.claude/plans/` with titles and summaries
+- Select a plan to load and continue working on it
+
+```
+/plan latest
+```
+- Quickly loads the most recently modified plan
+
+```
+/plan save
+```
+- Saves current plan to chosen destination (local, Notion, GitHub)
+- Use before running out of context to preserve your work
+
+```
+/plan search <query>
+```
+- Search plans across all sources by keyword
+
+## Customization
+
+Update the database name and data source ID in the command files to match your own Notion setup.

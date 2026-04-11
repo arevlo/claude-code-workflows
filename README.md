@@ -18,11 +18,11 @@ A curated collection of Claude Code plugins providing slash commands for design-
 /plugin marketplace add arevlo/claude-code-workflows
 
 # Install specific plugins
-/plugin install arevlo:context@claude-code-workflows
-/plugin install arevlo:design@claude-code-workflows
-/plugin install arevlo:dev@claude-code-workflows
-/plugin install arevlo:obsidian@claude-code-workflows
-/plugin install arevlo:swarm@claude-code-workflows
+/plugin install context@claude-code-workflows
+/plugin install design@claude-code-workflows
+/plugin install dev@claude-code-workflows
+/plugin install obsidian@claude-code-workflows
+/plugin install swarm@claude-code-workflows
 ```
 
 ### Updating
@@ -38,7 +38,7 @@ A curated collection of Claude Code plugins providing slash commands for design-
 
 ## Plugins
 
-### arevlo:context
+### context
 
 **Session context and plan management with multi-source storage.**
 
@@ -48,11 +48,11 @@ Save and load Claude Code session context to multiple destinations including loc
 
 | Command | Description |
 |---------|-------------|
-| `/arevlo-context:save-context` | Save current session to local, Notion, GitHub, or docs |
-| `/arevlo-context:load-context <query>` | Search and load prior context from multiple sources |
-| `/arevlo-context:context-status` | Check current context state and recent saves |
-| `/arevlo-context:checkpoint [label]` | Quick checkpoint for mid-task saves (faster than save-context) |
-| `/arevlo-context:plan` | Load, save, or browse Claude Code plans |
+| `/context:save-context` | Save current session to local, Notion, GitHub, or docs |
+| `/context:load-context <query>` | Search and load prior context from multiple sources |
+| `/context:context-status` | Check current context state and recent saves |
+| `/context:checkpoint [label]` | Quick checkpoint for mid-task saves (faster than save-context) |
+| `/context:plan` | Load, save, or browse Claude Code plans |
 
 #### Context Sources
 
@@ -72,26 +72,26 @@ Session Transcripts are automatically saved by Claude Code for every session. Us
 
 ```bash
 # End of session
-/arevlo-context:save-context
+/context:save-context
 # → Select destination (local, Notion, GitHub, docs)
 # → Choose tag type (Context, Summary, Spec, Reference)
 # → Auto-generates comprehensive summary
 
 # Start of session
-/arevlo-context:load-context "authentication implementation"
+/context:load-context "authentication implementation"
 # → Choose source to search
 # → Select and load previous context
 
 # Mid-task checkpoint
-/arevlo-context:checkpoint "before-refactor"
+/context:checkpoint "before-refactor"
 # → Fast save without prompts
 
 # Check status
-/arevlo-context:context-status
+/context:context-status
 # → Shows recent saves and checkpoints
 
 # Continue a plan
-/arevlo-context:plan
+/context:plan
 # → Browse and load recent plans
 ```
 
@@ -102,7 +102,7 @@ Session Transcripts are automatically saved by Claude Code for every session. Us
 
 ---
 
-### arevlo:design
+### design
 
 **Figma Make design-to-code workflow integration.**
 
@@ -112,18 +112,18 @@ Create and manage prompts/changelogs in Notion for Figma Make, enabling design-t
 
 | Command | Description |
 |---------|-------------|
-| `/arevlo-design:make` | Create or update prompts/changelogs in Notion for Figma Make |
+| `/design:make` | Create or update prompts/changelogs in Notion for Figma Make |
 
 #### Workflow
 
 ```
 1. Create Spec
    ↓
-   /arevlo-context:save-context (tag: Spec)
+   /context:save-context (tag: Spec)
    ↓
 2. Create Prompt
    ↓
-   /arevlo-design:make (references saved spec)
+   /design:make (references saved spec)
    ↓
 3. Figma Make Implementation
    ↓
@@ -147,7 +147,7 @@ When creating prompts for Figma Make:
 
 ---
 
-### arevlo:dev
+### dev
 
 **Git workflows, PR management, and development automation.**
 
@@ -157,18 +157,18 @@ Streamline git operations with conventional commits, PR descriptions, code revie
 
 | Command | Description |
 |---------|-------------|
-| `/arevlo-dev:commit` | Full commit workflow with branch management and PR updates |
-| `/arevlo-dev:pr-describe` | Generate/update PR description from all changes since main |
-| `/arevlo-dev:pr-review` | Request AI code review via GitHub comment (@claude or @codex) |
-| `/arevlo-dev:release <version>` | Create semver release with tag and GitHub release notes |
-| `/arevlo-dev:kill-port <port>` | Check and kill processes using specific ports |
-| `/arevlo-dev:resolve` | Interactive merge conflict resolution with AI assistance |
+| `/dev:commit` | Full commit workflow with branch management and PR updates |
+| `/dev:pr-describe` | Generate/update PR description from all changes since main |
+| `/dev:pr-review` | Request AI code review via GitHub comment (@claude or @codex) |
+| `/dev:release <version>` | Create semver release with tag and GitHub release notes |
+| `/dev:kill-port <port>` | Check and kill processes using specific ports |
+| `/dev:resolve` | Interactive merge conflict resolution with AI assistance |
 
 #### Commit Workflow
 
 ```bash
 # After making code changes
-/arevlo-dev:commit
+/dev:commit
 
 # What it does:
 # 1. Checks if branch PR was already merged (prevents lost commits)
@@ -198,22 +198,22 @@ type: brief description (50 chars max)
 
 ```bash
 # Patch version (1.6.0 → 1.6.1)
-/arevlo-dev:release patch
+/dev:release patch
 
 # Minor version (1.6.0 → 1.7.0)
-/arevlo-dev:release minor
+/dev:release minor
 
 # Major version (1.6.0 → 2.0.0)
-/arevlo-dev:release major
+/dev:release major
 
 # Explicit version
-/arevlo-dev:release 2.1.0
+/dev:release 2.1.0
 ```
 
 #### Merge Conflict Resolution
 
 ```bash
-/arevlo-dev:resolve
+/dev:resolve
 
 # Interactive workflow:
 # 1. Detects conflicts in current repo
@@ -230,7 +230,7 @@ type: brief description (50 chars max)
 
 ---
 
-### arevlo:obsidian
+### obsidian
 
 **Capture screenshots and context to Obsidian Zettelkasten vault as fragment notes.**
 
@@ -304,7 +304,7 @@ Use `mcp__obsidian-zettelkasten__process_fragment` to convert fragments to primi
 
 ---
 
-### arevlo:swarm
+### swarm
 
 **Multi-agent orchestration with autonomous workflows and ACE context management.**
 
@@ -314,26 +314,26 @@ Enable parallel code analysis with specialized AI agents and autonomous research
 
 | Command | Description |
 |---------|-------------|
-| `/arevlo-swarm:auto <goal>` | Autonomous workflow - research, plan, implement with checkpoints |
-| `/arevlo-swarm:auto --resume` | Resume from most recent checkpoint |
-| `/arevlo-swarm:swarm [preset]` | Start multi-agent swarm with preset or auto-detect |
-| `/arevlo-swarm:spawn <agent>` | Spawn a single background agent for specific analysis |
-| `/arevlo-swarm:hive` | Check status and findings from all running agents |
-| `/arevlo-swarm:health` | Check context health metrics and alerts |
-| `/arevlo-swarm:sync` | Consolidate findings into prioritized action items |
-| `/arevlo-swarm:fix` | Interactive mode to address swarm findings one by one |
-| `/arevlo-swarm:stop [agent]` | Stop one or all running agents |
-| `/arevlo-swarm:checkpoint [label]` | Create checkpoint during /auto sessions |
-| `/arevlo-swarm:handoff` | Prepare handoff when approaching context limits |
-| `/arevlo-swarm:resume` | Resume from a prior checkpoint or auto phase |
-| `/arevlo-swarm:compact` | Export session then compact working memory |
+| `/swarm:auto <goal>` | Autonomous workflow - research, plan, implement with checkpoints |
+| `/swarm:auto --resume` | Resume from most recent checkpoint |
+| `/swarm:swarm [preset]` | Start multi-agent swarm with preset or auto-detect |
+| `/swarm:spawn <agent>` | Spawn a single background agent for specific analysis |
+| `/swarm:hive` | Check status and findings from all running agents |
+| `/swarm:health` | Check context health metrics and alerts |
+| `/swarm:sync` | Consolidate findings into prioritized action items |
+| `/swarm:fix` | Interactive mode to address swarm findings one by one |
+| `/swarm:stop [agent]` | Stop one or all running agents |
+| `/swarm:checkpoint [label]` | Create checkpoint during /auto sessions |
+| `/swarm:handoff` | Prepare handoff when approaching context limits |
+| `/swarm:resume` | Resume from a prior checkpoint or auto phase |
+| `/swarm:compact` | Export session then compact working memory |
 
 #### Autonomous Workflow
 
 For complex tasks requiring research, planning, and implementation:
 
 ```bash
-/arevlo-swarm:auto "add user authentication with OAuth"
+/swarm:auto "add user authentication with OAuth"
 
 # Phase 1: Research
 # - Explores codebase in isolated context
@@ -351,7 +351,7 @@ For complex tasks requiring research, planning, and implementation:
 # - Monitors context usage
 
 # Resume interrupted session
-/arevlo-swarm:auto --resume
+/swarm:auto --resume
 ```
 
 #### Parallel Analysis Workflow
@@ -360,22 +360,22 @@ For code review and quality analysis:
 
 ```bash
 # Auto-detect project and recommend agents
-/arevlo-swarm:swarm
+/swarm:swarm
 
 # Or use a preset
-/arevlo-swarm:swarm review
+/swarm:swarm review
 
 # Check agent status and findings
-/arevlo-swarm:hive
+/swarm:hive
 
 # Consolidate all findings
-/arevlo-swarm:sync
+/swarm:sync
 
 # Fix issues interactively
-/arevlo-swarm:fix
+/swarm:fix
 
 # Stop when done
-/arevlo-swarm:stop
+/swarm:stop
 ```
 
 #### Available Presets
@@ -410,7 +410,7 @@ For code review and quality analysis:
 #### Context Health Monitoring
 
 ```bash
-/arevlo-swarm:health
+/swarm:health
 
 # Shows metrics:
 # - File reads (threshold: 50)
@@ -445,7 +445,7 @@ Agents communicate through `.claude/swarm/`:
 #### Interactive Fix Mode
 
 ```bash
-/arevlo-swarm:fix
+/swarm:fix
 
 # Workflow:
 # 1. Shows issue and current code
@@ -470,95 +470,95 @@ Agents communicate through `.claude/swarm/`:
 ```bash
 # 1. Create and save spec
 # (Work with Claude Code to create detailed spec)
-/arevlo-context:save-context
+/context:save-context
 # → Select: Notion
 # → Tag: Spec
 # → Title: "User authentication flow"
 
 # 2. Create Figma Make prompt
-/arevlo-design:make
+/design:make
 # → References saved spec
 # → Creates implementation prompt
 
 # 3. (Figma Make implements the design)
 
 # 4. Review with swarm
-/arevlo-swarm:swarm review
+/swarm:swarm review
 
 # 5. Check findings
-/arevlo-swarm:hive
+/swarm:hive
 
 # 6. Fix issues
-/arevlo-swarm:fix
+/swarm:fix
 
 # 7. Commit changes
-/arevlo-dev:commit
+/dev:commit
 
 # 8. Create release
-/arevlo-dev:release minor
+/dev:release minor
 ```
 
 ### Autonomous Complex Feature
 
 ```bash
 # Start autonomous workflow
-/arevlo-swarm:auto "implement OAuth authentication with Google and GitHub"
+/swarm:auto "implement OAuth authentication with Google and GitHub"
 
 # → Research phase (explores codebase)
 # → Plan phase (creates blueprint, waits for approval)
 # → Implement phase (executes with checkpoints)
 
 # If interrupted, resume
-/arevlo-swarm:auto --resume
+/swarm:auto --resume
 
 # Check context health anytime
-/arevlo-swarm:health
+/swarm:health
 
 # Final commit
-/arevlo-dev:commit
+/dev:commit
 ```
 
 ### Code Quality Audit
 
 ```bash
 # 1. Start comprehensive analysis
-/arevlo-swarm:swarm full
+/swarm:swarm full
 
 # 2. Monitor progress
-/arevlo-swarm:hive
+/swarm:hive
 
 # 3. Consolidate findings
-/arevlo-swarm:sync
+/swarm:sync
 
 # 4. Address issues interactively
-/arevlo-swarm:fix
+/swarm:fix
 
 # 5. Save findings for later
-/arevlo-context:save-context
+/context:save-context
 # → Tag: Summary
 # → Title: "Q4 2024 code audit"
 
 # 6. Stop agents
-/arevlo-swarm:stop
+/swarm:stop
 ```
 
 ### Context Management Pattern
 
 ```bash
 # During work - checkpoint frequently
-/arevlo-context:checkpoint "before-database-refactor"
+/context:checkpoint "before-database-refactor"
 
 # Mid-session - check context health
-/arevlo-swarm:health
+/swarm:health
 
 # When warned - save and compact
-/arevlo-swarm:compact
+/swarm:compact
 
 # End of session - comprehensive save
-/arevlo-context:save-context
+/context:save-context
 
 # Next session - resume
-/arevlo-context:load-context "database refactor"
+/context:load-context "database refactor"
 ```
 
 ## Setup Requirements
@@ -571,7 +571,7 @@ Agents communicate through `.claude/swarm/`:
 
 #### Notion MCP Server
 
-Required for: `arevlo-context` (Notion destinations), `arevlo-design`
+Required for: `context` (Notion destinations), `design`
 
 Add to `~/.claude/.claude.json` under `mcpServers`:
 
@@ -590,19 +590,19 @@ Authenticate via Notion when prompted.
 
 **Notion Database Setup:**
 
-For `arevlo-context`, create database named `_clawd` with:
+For `context`, create database named `_clawd` with:
 - **Name** (title) - Context title
 - **Project** (select) - Project name
 - **Tags** (multi-select) - Context, Summary, Spec, Reference
 
-For `arevlo-design`, create database named `_make` with:
+For `design`, create database named `_make` with:
 - **Name** (title) - Prompt title
 - **Type** (select) - Prompt, Changelog
 - **Project** (select) - Project name
 
 #### GitHub CLI
 
-Required for: `arevlo-dev`
+Required for: `dev`
 
 ```bash
 # macOS
@@ -620,7 +620,7 @@ gh auth login
 
 ### Platform-Specific Notes
 
-#### arevlo:swarm Requirements
+#### swarm Requirements
 
 - **macOS/Linux:** bash or zsh (default)
 - **Windows:** PowerShell (default on Windows 10+), Git Bash, or WSL
@@ -633,25 +633,25 @@ gh auth login
 
 Update database names and data source IDs in command files:
 
-**arevlo:context:**
+**context:**
 - Default database: `_clawd`
 - Update in: `commands/save-context.md`
 
-**arevlo:design:**
+**design:**
 - Default database: `_make`
 - Update in: `commands/make.md`
 
 ### Agent Behavior
 
 Customize agent focus by editing files in:
-- `plugins/arevlo-swarm/agents/reviewer.md`
-- `plugins/arevlo-swarm/agents/silent-hunter.md`
-- `plugins/arevlo-swarm/agents/type-analyzer.md`
+- `plugins/swarm/agents/reviewer.md`
+- `plugins/swarm/agents/silent-hunter.md`
+- `plugins/swarm/agents/type-analyzer.md`
 - etc.
 
 ### Custom Swarm Presets
 
-Add custom presets to `plugins/arevlo-swarm/commands/swarm.md`:
+Add custom presets to `plugins/swarm/commands/swarm.md`:
 
 ```json
 {
@@ -674,11 +674,11 @@ Plugins follow semantic versioning. Check the marketplace for updates:
 ```
 
 Current versions:
-- **arevlo:context:** 1.8.1
-- **arevlo:design:** 1.8.1
-- **arevlo:dev:** 1.8.1
-- **arevlo:obsidian:** 1.2.0
-- **arevlo:swarm:** 1.8.1
+- **context:** 1.8.1
+- **design:** 1.8.1
+- **dev:** 1.8.1
+- **obsidian:** 1.2.0
+- **swarm:** 1.8.1
 
 ## Contributing
 

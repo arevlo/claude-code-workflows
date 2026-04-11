@@ -1,5 +1,5 @@
 {
-  "name": "arevlo:obsidian",
-  "description": "Capture screenshots and context to Obsidian Zettelkasten vault as fragment notes. Save external links to note tables.",
-  "version": "1.2.1"
+  "name": "obsidian",
+  "description": "Capture screenshots, manage notes, run digests, and maintain your Obsidian Zettelkasten vault from Claude Code.",
+  "version": "1.3.0"
 }

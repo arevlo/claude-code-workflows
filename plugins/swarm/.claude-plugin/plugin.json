@@ -1,0 +1,5 @@
+{
+  "name": "swarm",
+  "description": "Multi-agent orchestration with context awareness - proxy signal monitoring, /export integration, checkpoints, compaction, resume, and handoff capabilities",
+  "version": "1.8.1"
+}
