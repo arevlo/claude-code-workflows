@@ -18,6 +18,7 @@ You decide *whether* something is worth saving once, then it lands in both store
 | Command | Description |
 |---------|-------------|
 | `/memory:init [slug]` | Bootstrap the dual-write pattern in the current repo — derives a project slug, writes `CLAUDE.md` + `MEMORY.md` scaffolding, and verifies mem0 wiring with a live round-trip test. Idempotent. |
+| `/memory:save <text>` | Evaluate and persist a memory. Claude analyzes the input, decides if it's worth saving (vs. derivable, ephemeral, or fixable), classifies the type, checks for duplicates, and dual-writes to local markdown + mem0. |
 
 ## Prerequisites
 
