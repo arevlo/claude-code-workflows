@@ -103,9 +103,11 @@ Read `$PROJECT_ROOT/CLAUDE.md` if it exists.
 
 **Project slug**: `<SLUG>` — use this as the `app_id` when mirroring memories to mem0.
 
+**Mem0 user_id**: derived from `$CLAUDE_MEM0_USER_ID` or `$(whoami)` — set per-machine, not per-project.
+
 **Local memory directory**: `~/.claude/projects/<SANITIZED>/memory/`
 
-This project follows the dual-write memory pattern in `~/.claude/CLAUDE.md` — every auto-memory save goes to both the local file system and mem0 (scoped by `app_id: "<SLUG>"`).
+This project follows the dual-write memory pattern in `~/.claude/CLAUDE.md` — every auto-memory save goes to both the local file system and mem0 (scoped by `user_id` + `app_id: "<SLUG>"`).
 ```
 
 For the one-line description: if the repo has a `package.json` or `README.md`, try reading the first line/description field and use it. Otherwise leave `<TODO: describe this project>` and mention in the summary that the user should edit it.
