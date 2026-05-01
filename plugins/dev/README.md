@@ -24,6 +24,7 @@ Git workflows, branch management, PR lifecycle, worktree operations, and develop
 - `/release` - Create a semver release with tag and GitHub release notes
 - `/resolve` - Interactively resolve git merge conflicts
 - `/cubic-resolve` - Fix Cubic, Codex, CodeQL, and Copilot Autofix PR findings
+- `/test-and-fix` - Pre-CI gate: scaffold tests if missing, run the local check ladder (typecheck → lint → build → integration → smoke → e2e), and loop fix-and-rerun until green. Smoke uses agent-browser via `dev:test-smoke`.
 - `/worktree-select` - Pick an existing worktree or create a new one
 - `/worktree-commit` - Commit and push from a worktree, then continue or tear down
 - `/worktree-sync` - Rebase worktree branch onto latest main
