@@ -1,5 +1,5 @@
 {
   "name": "memory",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Bootstrap and manage the dual-write memory pattern — mirror Claude Code auto-memories into mem0 with project-scoped app_id so every repo has both a local markdown store and a semantic-search store"
 }
