@@ -1,0 +1,5 @@
+{
+  "name": "ntn",
+  "version": "0.1.0",
+  "description": "Notion Developer Platform workflows — log session summaries to a Notion 'Claude Log'-style database, and other ntn-CLI / Notion-Workers-adjacent helpers."
+}
