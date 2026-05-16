@@ -46,6 +46,10 @@
     {
       "name": "memory",
       "source": "./plugins/memory"
+    },
+    {
+      "name": "ntn",
+      "source": "./plugins/ntn"
     }
   ]
 }
